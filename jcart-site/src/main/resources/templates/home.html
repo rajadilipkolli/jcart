@@ -23,7 +23,7 @@
 						<div class="single-shop-product">
 							<div class="product-upper">
 								<img src="assets/img/products/2.jpg" alt=""
-									th:src="@{'/products/images/{id}.jpg'(id=${product.id})}" />
+									th:src="@{'/products/images/{id}'(id=${product.id})}" />
 							</div>
 							<h2>
 								<a href="#" th:href="@{/products/{sku}(sku=${product.sku})}"
