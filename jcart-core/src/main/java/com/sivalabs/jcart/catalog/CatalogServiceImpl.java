@@ -50,7 +50,7 @@ public class CatalogServiceImpl implements CatalogService
     @Override
     public Category getCategoryById(Integer id)
     {
-        return categoryRepository.findOne(id);
+        return categoryRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class CatalogServiceImpl implements CatalogService
     @Override
     public Product getProductById(Integer id)
     {
-        return productRepository.findOne(id);
+        return productRepository.findById(id).orElse(null);
     }
 
     @Override

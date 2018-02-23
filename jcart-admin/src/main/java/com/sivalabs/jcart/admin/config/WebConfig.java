@@ -6,8 +6,7 @@ import org.apache.tomcat.util.descriptor.web.SecurityCollection;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 
 import com.sivalabs.jcart.admin.security.PostAuthorizationFilter;
@@ -25,8 +24,7 @@ import com.sivalabs.jcart.admin.security.PostAuthorizationFilter;
  *
  */
 @Configuration
-public class WebConfig extends WebMvcConfigurerAdapter
-{
+public class WebConfig implements WebMvcConfigurer {
     @Value("${server.port:9443}")
     private int serverPort;
 
@@ -40,64 +38,43 @@ public class WebConfig extends WebMvcConfigurerAdapter
      * @param messageSource
      */
     public WebConfig(PostAuthorizationFilter postAuthorizationFilter,
-            MessageSource messageSource)
-    {
+            MessageSource messageSource) {
         this.postAuthorizationFilter = postAuthorizationFilter;
         this.messageSource = messageSource;
     }
 
     @Bean
-    public Validator jsrValidator()
-    {
+    public Validator jsrValidator() {
         LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
         factory.setValidationMessageSource(messageSource);
         return factory;
     }
 
-    // http://stackoverflow.com/questions/25957879/filter-order-in-spring-boot
- /*   @Bean
-    public FilterRegistrationBean securityFilterChain(
-            @Qualifier(AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME) Filter securityFilter)
-    {
-        FilterRegistrationBean registration = new FilterRegistrationBean(securityFilter);
-        registration.setOrder(Integer.MAX_VALUE - 1);
-        registration
-                .setName(AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME);
-        return registration;
-    }*/
-
     @Bean
-    public FilterRegistrationBean postAuthorizationFilterRegistrationBean()
-    {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+    public FilterRegistrationBean<PostAuthorizationFilter> postAuthorizationFilterRegistrationBean() {
+        FilterRegistrationBean<PostAuthorizationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(postAuthorizationFilter);
         registrationBean.setOrder(Integer.MAX_VALUE);
         return registrationBean;
     }
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry)
-    {
-        super.addViewControllers(registry);
+    public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("public/login");
         registry.addRedirectViewController("/", "/home");
 
     }
 
     @Bean
-    public SpringSecurityDialect securityDialect()
-    {
+    public SpringSecurityDialect securityDialect() {
         return new SpringSecurityDialect();
     }
 
     @Bean
-    public EmbeddedServletContainerFactory servletContainer()
-    {
-        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory()
-        {
+    public TomcatServletWebServerFactory servletContainer() {
+        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
             @Override
-            protected void postProcessContext(Context context)
-            {
+            protected void postProcessContext(Context context) {
                 SecurityConstraint securityConstraint = new SecurityConstraint();
                 securityConstraint.setUserConstraint("CONFIDENTIAL");
                 SecurityCollection collection = new SecurityCollection();
@@ -111,8 +88,7 @@ public class WebConfig extends WebMvcConfigurerAdapter
         return tomcat;
     }
 
-    private Connector initiateHttpConnector()
-    {
+    private Connector initiateHttpConnector() {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
         connector.setPort(9090);

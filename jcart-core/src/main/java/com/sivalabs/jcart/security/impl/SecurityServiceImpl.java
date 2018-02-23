@@ -5,6 +5,7 @@ import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -64,7 +65,8 @@ public class SecurityServiceImpl implements SecurityService
         }
         List<Permission> persistedPermissions = role.getPermissions().stream()
                 .filter(permission -> nonNull(permission.getId()))
-                .map(permission -> permissionRepository.findOne(permission.getId()))
+                .map(permission -> permissionRepository.findById(permission.getId()).orElse(null))
+                .filter(Objects::nonNull)
                 .collect(toList());
         role.setPermissions(persistedPermissions);
         return roleRepository.save(role);
@@ -73,7 +75,7 @@ public class SecurityServiceImpl implements SecurityService
     @Override
     public Role getRoleById(Integer id)
     {
-        return roleRepository.findOne(id);
+        return roleRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -88,7 +90,8 @@ public class SecurityServiceImpl implements SecurityService
 
         List<Permission> updatedPermissions = role.getPermissions().stream()
                 .filter(permission -> nonNull(permission.getId()))
-                .map(permission -> permissionRepository.findOne(permission.getId()))
+                .map(permission -> permissionRepository.findById(permission.getId()).orElse(null))
+                .filter(Objects::nonNull)
                 .collect(toList());
         persistedRole.setPermissions(updatedPermissions);
         return roleRepository.save(persistedRole);
@@ -151,7 +154,9 @@ public class SecurityServiceImpl implements SecurityService
         }
         List<Role> persistedRoles = user.getRoles().stream()
                 .filter(role -> nonNull(role.getId()))
-                .map(role -> roleRepository.findOne(role.getId())).collect(toList());
+                .map(role -> roleRepository.findById(role.getId()).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(toList());
         user.setRoles(persistedRoles);
 
         return userRepository.save(user);
@@ -160,7 +165,7 @@ public class SecurityServiceImpl implements SecurityService
     @Override
     public User getUserById(Integer id)
     {
-        return userRepository.findOne(id);
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -174,7 +179,9 @@ public class SecurityServiceImpl implements SecurityService
 
         List<Role> updatedRoles = user.getRoles().stream()
                 .filter(role -> nonNull(role.getId()))
-                .map(role -> roleRepository.findOne(role.getId())).collect(toList());
+                .map(role -> roleRepository.findById(role.getId()).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(toList());
         persistedUser.setRoles(updatedRoles);
         return userRepository.save(persistedUser);
     }

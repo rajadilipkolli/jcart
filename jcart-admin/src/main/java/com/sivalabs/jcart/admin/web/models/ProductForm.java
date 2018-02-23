@@ -18,9 +18,9 @@ package com.sivalabs.jcart.admin.web.models;
 import java.math.BigDecimal;
 
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sivalabs.jcart.entities.Category;

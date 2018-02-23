@@ -96,7 +96,7 @@ public class PermissionControllerTest
     public void testListPermissionsWithAnonymousUser() throws Exception
     {
         this.mockMvc.perform(get("/permissions")).andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test

@@ -39,7 +39,6 @@ INSERT INTO users (id, email, password, name) VALUES
 (4, 'siva@gmail.com', '$2a$10$UFEPYW7Rx1qZqdHajzOnB.VBR3rvm7OI7uSix4RadfQiNhkZOi2fi', 'Siva'),
 (5, 'user@gmail.com', '$2a$10$ByIUiNaRfBKSV6urZoBBxe4UbJ/sS6u1ZaPORHF9AtNWAuVPVz1by', 'DemoUser'),
 (6, 'rajadileepkolli@gmail.com','$2a$08$vrmtYm/9JQAIvU77MxouFeeVP7v.15Z7hE0ML8m9CxCmSTVF1Gtky','superadmin')
-
 ;
 
 insert into role_permission(role_id, perm_id) values
