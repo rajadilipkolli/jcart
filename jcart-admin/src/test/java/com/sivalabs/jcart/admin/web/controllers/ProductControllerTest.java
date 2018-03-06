@@ -142,7 +142,7 @@ public class ProductControllerTest
     @WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
     public void testCreateProductValidationFails() throws Exception
     {
-        this.mockMvc.perform(post("/products")).andExpect(status().isOk())
+        this.mockMvc.perform(post("/products")).andDo(print()).andExpect(status().isOk())
                 .andExpect(view().name("products/create_product"))
                 .andExpect(model().attributeHasFieldErrors("product",
                         new String[] { "categoryId", "sku", "name", "price" }));
