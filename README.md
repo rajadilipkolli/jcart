@@ -2,7 +2,7 @@
 JCart is a simple e-commerce application built with Spring.
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c9cd10aebb104847aeb0240d73d64f30)](https://www.codacy.com/app/rajadilipkolli/jcart?utm_source=github.com&utm_medium=referral&utm_content=rajadilipkolli/jcart&utm_campaign=badger)
-[![Build status](https://travis-ci.org/rajadilipkolli/jcart.svg?branch=master)](https://travis-ci.org/rajadilipkolli/jcart.svg) 
+[![Build status](https://travis-ci.org/rajadilipkolli/jcart.svg?branch=master)](https://travis-ci.org/rajadilipkolli/jcart) 
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.sivalabs:jcart&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.sivalabs:jcart)
 [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.sivalabs:jcart&metric=coverage)](https://sonarcloud.io/component_measures/metric/coverage/list?id=com.sivalabs:jcart)
 [![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=com.sivalabs:jcart&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=com.sivalabs:jcart)
