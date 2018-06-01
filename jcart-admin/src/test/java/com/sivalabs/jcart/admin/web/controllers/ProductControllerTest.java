@@ -7,12 +7,11 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -113,8 +112,7 @@ public class ProductControllerTest {
 	@Test
 	@WithAnonymousUser
 	public void testListProductsWithOutSecurity() throws Exception {
-		this.mockMvc.perform(get("/products")).andDo(print())
-				.andExpect(status().is3xxRedirection());
+		this.mockMvc.perform(get("/products")).andExpect(status().isUnauthorized());
 	}
 
 	@Test
@@ -136,7 +134,7 @@ public class ProductControllerTest {
 	@Ignore
 	@WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
 	public void testCreateProductValidationFails() throws Exception {
-		this.mockMvc.perform(post("/products")).andDo(print()).andExpect(status().isOk())
+		this.mockMvc.perform(post("/products")).andExpect(status().isOk())
 				.andExpect(view().name("products/create_product"))
 				.andExpect(model().attributeHasFieldErrors("product",
 						new String[] { "categoryId", "sku", "name", "price" }));
@@ -151,7 +149,6 @@ public class ProductControllerTest {
 		this.mockMvc
 				.perform(post("/products").param("categoryId", "1").param("sku", "P0101")
 						.param("name", "product").param("price", "250.00"))
-				.andDo(print())
 				.andExpect(flash().attribute("info",
 						equalTo("Product created successfully")))
 				.andExpect(status().is3xxRedirection())

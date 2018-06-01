@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -90,8 +89,7 @@ public class PermissionControllerTest {
 	@Test
 	@WithAnonymousUser
 	public void testListPermissionsWithAnonymousUser() throws Exception {
-		this.mockMvc.perform(get("/permissions")).andDo(print())
-				.andExpect(status().is3xxRedirection());
+		this.mockMvc.perform(get("/permissions")).andExpect(status().isUnauthorized());
 	}
 
 	@Test
