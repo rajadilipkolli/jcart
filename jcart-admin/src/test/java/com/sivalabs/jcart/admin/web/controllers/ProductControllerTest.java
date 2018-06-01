@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.admin.web.controllers;
 
@@ -56,131 +56,124 @@ import com.sivalabs.jcart.entities.Product;
  */
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = { ProductController.class })
-public class ProductControllerTest
-{
-    @Autowired
-    private WebApplicationContext context;
+public class ProductControllerTest {
 
-    private MockMvc mockMvc;
+	@Autowired
+	private WebApplicationContext context;
 
-    @MockBean
-    private CatalogService catalogService;
+	private MockMvc mockMvc;
 
-    @MockBean
-    private ProductFormValidator productFormValidator;
+	@MockBean
+	private CatalogService catalogService;
 
-    ProductController productController;
+	@MockBean
+	private ProductFormValidator productFormValidator;
 
-    private String name = "Product Name";
+	ProductController productController;
 
-    private String description = "Product Description";
+	private String name = "Product Name";
 
-    Product product = new Product();
+	private String description = "Product Description";
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception
-    {
-        mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity())
-                .build();
+	Product product = new Product();
 
-        Category category = new Category();
-        category.setDisplayOrder(1);
-        List<Category> categoryList = Arrays.asList(category);
-        when(catalogService.getAllCategories()).thenReturn(categoryList);
-        product.setName(name);
-        product.setSku("P101");
-        product.setDescription(description);
-        product.setDisabled(false);
-        List<Product> productList = Arrays.asList(product);
-        when(catalogService.getAllProducts()).thenReturn(productList);
-        productController = new ProductController(catalogService, productFormValidator);
-    }
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity())
+				.build();
 
-    @Test
-    public void testGetHeaderTitle()
-    {
-        String headerTitle = productController.getHeaderTitle();
-        assertNotNull(headerTitle);
-        assertEquals(HeaderTitleConstants.PRODUCTTITLE, headerTitle);
-    }
+		Category category = new Category();
+		category.setDisplayOrder(1);
+		List<Category> categoryList = Arrays.asList(category);
+		when(catalogService.getAllCategories()).thenReturn(categoryList);
+		product.setName(name);
+		product.setSku("P101");
+		product.setDescription(description);
+		product.setDisabled(false);
+		List<Product> productList = Arrays.asList(product);
+		when(catalogService.getAllProducts()).thenReturn(productList);
+		productController = new ProductController(catalogService, productFormValidator);
+	}
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.admin.web.controllers.ProductController#categoriesList()}.
-     * @throws Exception
-     */
-    @Test
-    @WithAnonymousUser
-    public void testListProductsWithOutSecurity() throws Exception
-    {
-        this.mockMvc.perform(get("/products")).andDo(print())
-                .andExpect(status().is3xxRedirection());
-    }
+	@Test
+	public void testGetHeaderTitle() {
+		String headerTitle = productController.getHeaderTitle();
+		assertNotNull(headerTitle);
+		assertEquals(HeaderTitleConstants.PRODUCTTITLE, headerTitle);
+	}
 
-    @Test
-    @WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
-    public void testListProducts() throws Exception
-    {
-        this.mockMvc.perform(get("/products")).andExpect(status().isOk())
-                .andExpect(content().string(containsString(name)));
-    }
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.admin.web.controllers.ProductController#categoriesList()}.
+	 * @throws Exception
+	 */
+	@Test
+	@WithAnonymousUser
+	public void testListProductsWithOutSecurity() throws Exception {
+		this.mockMvc.perform(get("/products")).andDo(print())
+				.andExpect(status().is3xxRedirection());
+	}
 
-    @Test
-    @WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
-    public void testCreateProductForm() throws Exception
-    {
-        this.mockMvc.perform(get("/products/new"))
-                .andExpect(view().name("products/create_product"))
-                .andExpect(status().isOk());
-    }
+	@Test
+	@WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
+	public void testListProducts() throws Exception {
+		this.mockMvc.perform(get("/products")).andExpect(status().isOk())
+				.andExpect(content().string(containsString(name)));
+	}
 
-    @Test
-    @Ignore
-    @WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
-    public void testCreateProductValidationFails() throws Exception
-    {
-        this.mockMvc.perform(post("/products")).andDo(print()).andExpect(status().isOk())
-                .andExpect(view().name("products/create_product"))
-                .andExpect(model().attributeHasFieldErrors("product",
-                        new String[] { "categoryId", "sku", "name", "price" }));
-    }
+	@Test
+	@WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
+	public void testCreateProductForm() throws Exception {
+		this.mockMvc.perform(get("/products/new"))
+				.andExpect(view().name("products/create_product"))
+				.andExpect(status().isOk());
+	}
 
-    @Test
-    @Ignore
-    @WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
-    public void testCreateProductValidationPass() throws Exception
-    {
-        product.setId(1);
-        when(catalogService.createProduct(any())).thenReturn(product);
-        this.mockMvc
-                .perform(post("/products").param("categoryId", "1").param("sku", "P0101")
-                        .param("name", "product").param("price", "250.00"))
-                .andDo(print())
-                .andExpect(flash().attribute("info",
-                        equalTo("Product created successfully")))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/products"))
-                .andExpect(redirectedUrl("/products"));
-    }
+	@Test
+	@Ignore
+	@WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
+	public void testCreateProductValidationFails() throws Exception {
+		this.mockMvc.perform(post("/products")).andDo(print()).andExpect(status().isOk())
+				.andExpect(view().name("products/create_product"))
+				.andExpect(model().attributeHasFieldErrors("product",
+						new String[] { "categoryId", "sku", "name", "price" }));
+	}
 
-    @Test
-    public void testSaveProductImageToDisk() throws IOException
-    {
-        String filePath = this.getClass().getClassLoader().getResource("quilcart.png")
-                .getPath();
-        FileInputStream content = new FileInputStream(filePath);
-        MockMultipartFile image = new MockMultipartFile("quilcart", "quilcart.png",
-                "multipart/form-data", content);
-        ProductForm productForm = new ProductForm();
-        productForm.setId(10);
-        productForm.setImage(image);
-        productController.saveProductImageToDisk(productForm);
-        HttpServletResponse response = new MockHttpServletResponse();
-        productController.showProductImage(String.valueOf(productForm.getId()), null,
-                response);
-        assertEquals("image/jpg", response.getContentType());
-    }
+	@Test
+	@Ignore
+	@WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
+	public void testCreateProductValidationPass() throws Exception {
+		product.setId(1);
+		when(catalogService.createProduct(any())).thenReturn(product);
+		this.mockMvc
+				.perform(post("/products").param("categoryId", "1").param("sku", "P0101")
+						.param("name", "product").param("price", "250.00"))
+				.andDo(print())
+				.andExpect(flash().attribute("info",
+						equalTo("Product created successfully")))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/products"))
+				.andExpect(redirectedUrl("/products"));
+	}
+
+	@Test
+	public void testSaveProductImageToDisk() throws IOException {
+		String filePath = this.getClass().getClassLoader().getResource("quilcart.png")
+				.getPath();
+		FileInputStream content = new FileInputStream(filePath);
+		MockMultipartFile image = new MockMultipartFile("quilcart", "quilcart.png",
+				"multipart/form-data", content);
+		ProductForm productForm = new ProductForm();
+		productForm.setId(10);
+		productForm.setImage(image);
+		productController.saveProductImageToDisk(productForm);
+		HttpServletResponse response = new MockHttpServletResponse();
+		productController.showProductImage(String.valueOf(productForm.getId()), null,
+				response);
+		assertEquals("image/jpg", response.getContentType());
+	}
+
 }

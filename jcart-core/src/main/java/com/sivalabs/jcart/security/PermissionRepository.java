@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.security;
 
@@ -11,7 +11,6 @@ import com.sivalabs.jcart.entities.Permission;
  * @author Siva
  *
  */
-public interface PermissionRepository extends JpaRepository<Permission, Integer>
-{
+public interface PermissionRepository extends JpaRepository<Permission, Integer> {
 
 }

@@ -17,28 +17,25 @@ import lombok.RequiredArgsConstructor;
  */
 @Component
 @RequiredArgsConstructor
-public class CustomerValidator implements Validator
-{
-    private final CustomerService customerService;
+public class CustomerValidator implements Validator {
 
-    @Override
-    public boolean supports(Class<?> clazz)
-    {
-        return Customer.class.isAssignableFrom(clazz);
-    }
+	private final CustomerService customerService;
 
-    @Override
-    public void validate(Object target, Errors errors)
-    {
-        Customer customer = (Customer) target;
-        Customer customerByEmail = customerService
-                .getCustomerByEmail(customer.getEmail());
-        if (nonNull(customerByEmail))
-        {
-            errors.rejectValue("email", "error.exists",
-                    new Object[] { customer.getEmail() },
-                    "Email " + customer.getEmail() + " already in use");
-        }
-    }
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return Customer.class.isAssignableFrom(clazz);
+	}
+
+	@Override
+	public void validate(Object target, Errors errors) {
+		Customer customer = (Customer) target;
+		Customer customerByEmail = customerService
+				.getCustomerByEmail(customer.getEmail());
+		if (nonNull(customerByEmail)) {
+			errors.rejectValue("email", "error.exists",
+					new Object[] { customer.getEmail() },
+					"Email " + customer.getEmail() + " already in use");
+		}
+	}
 
 }

@@ -14,19 +14,18 @@ import lombok.Getter;
  *
  */
 @EqualsAndHashCode(callSuper = true)
-public class AuthenticatedUser extends org.springframework.security.core.userdetails.User
-{
+public class AuthenticatedUser
+		extends org.springframework.security.core.userdetails.User {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Getter
-    private Customer customer;
+	@Getter
+	private Customer customer;
 
-    public AuthenticatedUser(Customer customer)
-    {
-        super(customer.getEmail(), customer.getPassword(),
-                singletonList(new SimpleGrantedAuthority("ROLE_USER")));
-        this.customer = customer;
-    }
+	public AuthenticatedUser(Customer customer) {
+		super(customer.getEmail(), customer.getPassword(),
+				singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+		this.customer = customer;
+	}
 
 }

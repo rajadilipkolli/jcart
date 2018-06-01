@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.catalog;
 
@@ -24,38 +24,37 @@ import com.sivalabs.jcart.entities.Product;
  */
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class ProductRepositoryTest
-{
+public class ProductRepositoryTest {
 
-    @Autowired
-    TestEntityManager testEntityManager;
+	@Autowired
+	TestEntityManager testEntityManager;
 
-    @Autowired
-    ProductRepository productRepository;
+	@Autowired
+	ProductRepository productRepository;
 
-    private String description = "JUNIT Description";
-    private String name = "JUNIT";
+	private String description = "JUNIT Description";
 
-    private String sku = "JUNIT Sku";
+	private String name = "JUNIT";
 
-    @Test
-    public void testFindByName()
-    {
-        Product product = new Product();
-        product.setName(name);
-        product.setDescription(description);
-        product.setSku(sku);
-        testEntityManager.persist(product);
+	private String sku = "JUNIT Sku";
 
-        product = productRepository.findByName(name);
-        assertNotNull(product.getId());
-        assertTrue(product.getName().equals(name));
-        product = productRepository.findBySku(sku);
-        assertTrue(product.getSku().equals(sku));
+	@Test
+	public void testFindByName() {
+		Product product = new Product();
+		product.setName(name);
+		product.setDescription(description);
+		product.setSku(sku);
+		testEntityManager.persist(product);
 
-        List<Product> productList = productRepository.search(description);
-        assertEquals(1, productList.size());
+		product = productRepository.findByName(name);
+		assertNotNull(product.getId());
+		assertTrue(product.getName().equals(name));
+		product = productRepository.findBySku(sku);
+		assertTrue(product.getSku().equals(sku));
 
-    }
+		List<Product> productList = productRepository.search(description);
+		assertEquals(1, productList.size());
+
+	}
 
 }

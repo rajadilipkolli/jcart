@@ -24,19 +24,17 @@ import org.springframework.web.bind.annotation.GetMapping;
  *
  */
 @Controller
-public class ErrorController
-{
-    private static final String VIEWPREFIX = "error/";
+public class ErrorController {
 
-   /* protected String getHeaderTitle()
-    {
-        return "Error";
-    }*/
+	private static final String VIEWPREFIX = "error/";
 
-    @GetMapping("/403")
-    public String accessDenied()
-    {
-        return VIEWPREFIX + "accessDenied";
-    }
+	/*
+	 * protected String getHeaderTitle() { return "Error"; }
+	 */
+
+	@GetMapping("/403")
+	public String accessDenied() {
+		return VIEWPREFIX + "accessDenied";
+	}
 
 }

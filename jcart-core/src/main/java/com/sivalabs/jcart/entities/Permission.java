@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.entities;
 
@@ -26,20 +26,21 @@ import lombok.NoArgsConstructor;
 @Table(name = "permissions")
 @Data
 @NoArgsConstructor
-public class Permission implements Serializable
-{
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = AUTO)
-    private Integer id;
+public class Permission implements Serializable {
 
-    @Column(unique = true, nullable = false)
-    private String name;
+	private static final long serialVersionUID = 1L;
 
-    @Column(length = 1024)
-    private String description;
+	@Id
+	@GeneratedValue(strategy = AUTO)
+	private Integer id;
 
-    @ManyToMany(mappedBy = "permissions")
-    private List<Role> roles;
+	@Column(unique = true, nullable = false)
+	private String name;
+
+	@Column(length = 1024)
+	private String description;
+
+	@ManyToMany(mappedBy = "permissions")
+	private List<Role> roles;
 
 }

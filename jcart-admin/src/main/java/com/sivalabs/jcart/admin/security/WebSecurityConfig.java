@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.admin.security;
 
@@ -21,53 +21,39 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter
-{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsService customUserDetailsService;
+	private UserDetailsService customUserDetailsService;
 
-    /**
-     * @param customUserDetailsService
-     */
-    public WebSecurityConfig(UserDetailsService customUserDetailsService)
-    {
-        super();
-        this.customUserDetailsService = customUserDetailsService;
-    }
+	/**
+	 * @param customUserDetailsService
+	 */
+	public WebSecurityConfig(UserDetailsService customUserDetailsService) {
+		super();
+		this.customUserDetailsService = customUserDetailsService;
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder()
-    {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception
-    {
-        http
-            .csrf().disable()
-            .authorizeRequests()
-                .antMatchers("/resources/**", "/webjars/**", "/assets/**").permitAll()
-                .antMatchers("/", "/forgotPwd", "/resetPwd").permitAll()
-                // .antMatchers(HttpMethod.POST,"/api","/api/**").hasRole("ROLE_ADMIN")
-                .anyRequest().authenticated()
-            .and()
-                .formLogin()
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/home")
-                    .failureUrl("/login?error").permitAll()
-            .and()
-                .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll()
-            .and()
-                .exceptionHandling()
-                    .accessDeniedPage("/403");
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable().authorizeRequests()
+				.antMatchers("/resources/**", "/webjars/**", "/assets/**").permitAll()
+				.antMatchers("/", "/forgotPwd", "/resetPwd").permitAll()
+				// .antMatchers(HttpMethod.POST,"/api","/api/**").hasRole("ROLE_ADMIN")
+				.anyRequest().authenticated().and().formLogin().loginPage("/login")
+				.defaultSuccessUrl("/home").failureUrl("/login?error").permitAll().and()
+				.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.permitAll().and().exceptionHandling().accessDeniedPage("/403");
+	}
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
-    {
-        auth.userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(customUserDetailsService)
+				.passwordEncoder(passwordEncoder());
+	}
+
 }

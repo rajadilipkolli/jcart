@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.customers;
 
@@ -15,12 +15,11 @@ import com.sivalabs.jcart.entities.Order;
  * @author Siva
  *
  */
-public interface CustomerRepository extends JpaRepository<Customer, Integer>
-{
+public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
-    Customer findByEmail(String email);
+	Customer findByEmail(String email);
 
-    @Query("select o from Order o where o.customer.email=?1")
-    List<Order> getCustomerOrders(String email);
+	@Query("select o from Order o where o.customer.email=?1")
+	List<Order> getCustomerOrders(String email);
 
 }

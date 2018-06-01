@@ -23,40 +23,36 @@ import lombok.RequiredArgsConstructor;
  */
 @Controller
 @RequiredArgsConstructor
-public class HomeController extends AbstractJCartSiteController
-{
-    private final CatalogService catalogService;
+public class HomeController extends AbstractJCartSiteController {
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return "Home";
-    }
+	private final CatalogService catalogService;
 
-    @RequestMapping("/home")
-    public String home(Model model)
-    {
-        List<Category> previewCategories = new ArrayList<>();
-        List<Category> categories = catalogService.getAllCategories();
-        for (Category category : categories)
-        {
-            int noOfProductsToDisplay = 4;
-            Set<Product> previewProducts = category.getProducts().stream()
-                    .limit(noOfProductsToDisplay).collect(toSet());
-            category.setProducts(previewProducts);
-            previewCategories.add(category);
-        }
-        
-        model.addAttribute("categories", previewCategories);
-        return "home";
-    }
+	@Override
+	protected String getHeaderTitle() {
+		return "Home";
+	}
 
-    @RequestMapping("/categories/{name}")
-    public String category(@PathVariable String name, Model model)
-    {
-        Category category = catalogService.getCategoryByName(name);
-        model.addAttribute("category", category);
-        return "category";
-    }
+	@RequestMapping("/home")
+	public String home(Model model) {
+		List<Category> previewCategories = new ArrayList<>();
+		List<Category> categories = catalogService.getAllCategories();
+		for (Category category : categories) {
+			int noOfProductsToDisplay = 4;
+			Set<Product> previewProducts = category.getProducts().stream()
+					.limit(noOfProductsToDisplay).collect(toSet());
+			category.setProducts(previewProducts);
+			previewCategories.add(category);
+		}
+
+		model.addAttribute("categories", previewCategories);
+		return "home";
+	}
+
+	@RequestMapping("/categories/{name}")
+	public String category(@PathVariable String name, Model model) {
+		Category category = catalogService.getCategoryByName(name);
+		model.addAttribute("category", category);
+		return "category";
+	}
 
 }

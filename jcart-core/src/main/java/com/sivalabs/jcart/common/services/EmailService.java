@@ -37,32 +37,29 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EmailService
-{
-    private final JavaMailSender javaMailSender;
+public class EmailService {
 
-    @Value("${support.email}")
-    private String supportEmail;
+	private final JavaMailSender javaMailSender;
 
-    public void sendEmail(String to, String subject, String content)
-    {
-        try
-        {
-            // Prepare message using a Spring helper
-            final MimeMessage mimeMessage = this.javaMailSender.createMimeMessage();
-            final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
-            message.setSubject(subject);
-            message.setFrom(supportEmail);
-            message.setTo(to);
-            message.setText(content, true /* isHtml */);
+	@Value("${support.email}")
+	private String supportEmail;
 
-            javaMailSender.send(message.getMimeMessage());
-        }
-        catch (MailException | MessagingException e)
-        {
-            log.error(e.getMessage(), e);
-            throw new JCartException("Unable to send email");
-        }
-    }
+	public void sendEmail(String to, String subject, String content) {
+		try {
+			// Prepare message using a Spring helper
+			final MimeMessage mimeMessage = this.javaMailSender.createMimeMessage();
+			final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, "UTF-8");
+			message.setSubject(subject);
+			message.setFrom(supportEmail);
+			message.setTo(to);
+			message.setText(content, true /* isHtml */);
+
+			javaMailSender.send(message.getMimeMessage());
+		}
+		catch (MailException | MessagingException e) {
+			log.error(e.getMessage(), e);
+			throw new JCartException("Unable to send email");
+		}
+	}
 
 }

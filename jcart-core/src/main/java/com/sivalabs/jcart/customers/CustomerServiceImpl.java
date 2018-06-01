@@ -17,39 +17,33 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CustomerServiceImpl implements CustomerService
-{
+public class CustomerServiceImpl implements CustomerService {
 
-    private final CustomerRepository customerRepository;
+	private final CustomerRepository customerRepository;
 
-    @Override
-    public Customer getCustomerByEmail(String email)
-    {
-        return customerRepository.findByEmail(email);
-    }
+	@Override
+	public Customer getCustomerByEmail(String email) {
+		return customerRepository.findByEmail(email);
+	}
 
-    @Override
-    public Customer createCustomer(Customer customer)
-    {
-        return customerRepository.save(customer);
-    }
+	@Override
+	public Customer createCustomer(Customer customer) {
+		return customerRepository.save(customer);
+	}
 
-    @Override
-    public List<Customer> getAllCustomers()
-    {
-        return customerRepository.findAll();
-    }
+	@Override
+	public List<Customer> getAllCustomers() {
+		return customerRepository.findAll();
+	}
 
-    @Override
-    public Customer getCustomerById(Integer id)
-    {
-        return customerRepository.findById(id).orElse(null);
-    }
+	@Override
+	public Customer getCustomerById(Integer id) {
+		return customerRepository.findById(id).orElse(null);
+	}
 
-    @Override
-    public List<Order> getCustomerOrders(String email)
-    {
-        return customerRepository.getCustomerOrders(email);
-    }
+	@Override
+	public List<Order> getCustomerOrders(String email) {
+		return customerRepository.getCustomerOrders(email);
+	}
 
 }

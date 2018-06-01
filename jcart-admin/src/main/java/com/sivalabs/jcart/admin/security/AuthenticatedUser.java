@@ -19,31 +19,29 @@ import lombok.Getter;
  *
  */
 
-@EqualsAndHashCode(callSuper=true)
-public class AuthenticatedUser extends org.springframework.security.core.userdetails.User
-{
+@EqualsAndHashCode(callSuper = true)
+public class AuthenticatedUser
+		extends org.springframework.security.core.userdetails.User {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Getter
-    private User user;
+	@Getter
+	private User user;
 
-    public AuthenticatedUser(User user)
-    {
-        super(user.getEmail(), user.getPassword(), getAuthorities(user));
-        this.user = user;
-    }
+	public AuthenticatedUser(User user) {
+		super(user.getEmail(), user.getPassword(), getAuthorities(user));
+		this.user = user;
+	}
 
-    private static Collection<? extends GrantedAuthority> getAuthorities(User user)
-    {
-        return user.getRoles().stream()
-                .flatMap(role -> Stream.concat(
-                        Stream.of(new SimpleGrantedAuthority(role.getName())),
-                        role.getPermissions().stream()
-                                .map(permission -> new SimpleGrantedAuthority(
-                                        "ROLE_" + permission.getName()))))
-                .collect(toSet());
+	private static Collection<? extends GrantedAuthority> getAuthorities(User user) {
+		return user.getRoles().stream()
+				.flatMap(role -> Stream.concat(
+						Stream.of(new SimpleGrantedAuthority(role.getName())),
+						role.getPermissions().stream()
+								.map(permission -> new SimpleGrantedAuthority(
+										"ROLE_" + permission.getName()))))
+				.collect(toSet());
 
-    }
+	}
 
 }

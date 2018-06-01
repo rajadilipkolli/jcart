@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.site.web.models;
 
@@ -19,16 +19,16 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-public class LineItem implements Serializable
-{
-    private static final long serialVersionUID = 1L;
+public class LineItem implements Serializable {
 
-    private Product product;
-    private int quantity;
+	private static final long serialVersionUID = 1L;
 
-    public BigDecimal getSubTotal()
-    {
-        return product.getPrice().multiply(new BigDecimal(quantity));
-    }
+	private Product product;
+
+	private int quantity;
+
+	public BigDecimal getSubTotal() {
+		return product.getPrice().multiply(new BigDecimal(quantity));
+	}
 
 }

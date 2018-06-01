@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.entities;
 
@@ -26,24 +26,28 @@ import lombok.NoArgsConstructor;
 @Table(name = "order_items")
 @Data
 @NoArgsConstructor
-public class OrderItem implements Serializable
-{
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Integer id;
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-    private BigDecimal price;
-    private int quantity;
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+public class OrderItem implements Serializable {
 
-    public BigDecimal getSubTotal()
-    {
-        return product.getPrice().multiply(new BigDecimal(quantity));
-    }
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	private Integer id;
+
+	@ManyToOne
+	@JoinColumn(name = "product_id")
+	private Product product;
+
+	private BigDecimal price;
+
+	private int quantity;
+
+	@ManyToOne
+	@JoinColumn(name = "order_id")
+	private Order order;
+
+	public BigDecimal getSubTotal() {
+		return product.getPrice().multiply(new BigDecimal(quantity));
+	}
 
 }

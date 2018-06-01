@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.entities;
 
@@ -44,59 +44,55 @@ import lombok.Setter;
 @DynamicUpdate
 @Getter
 @Setter
-public class Order implements Serializable
-{
-    private static final long serialVersionUID = 1L;
-    
-   
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Integer id;
+public class Order implements Serializable {
 
-    @Column(unique = true, nullable = false)
-    private String orderNumber;
+	private static final long serialVersionUID = 1L;
 
-    @OneToMany(cascade = ALL, mappedBy = "order")
-    private Set<OrderItem> items;
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	private Integer id;
 
-    @ManyToOne(cascade = MERGE)
-    @JoinColumn(name = "cust_id")
-    private Customer customer;
+	@Column(unique = true, nullable = false)
+	private String orderNumber;
 
-    @OneToOne(cascade = PERSIST)
-    @JoinColumn(name = "delivery_addr_id")
-    private Address deliveryAddress;
+	@OneToMany(cascade = ALL, mappedBy = "order")
+	private Set<OrderItem> items;
 
-    @OneToOne(cascade = PERSIST)
-    @JoinColumn(name = "billing_addr_id")
-    private Address billingAddress;
+	@ManyToOne(cascade = MERGE)
+	@JoinColumn(name = "cust_id")
+	private Customer customer;
 
-    @OneToOne(cascade = PERSIST)
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
+	@OneToOne(cascade = PERSIST)
+	@JoinColumn(name = "delivery_addr_id")
+	private Address deliveryAddress;
 
-    @Enumerated(STRING)
-    private OrderStatus status;
+	@OneToOne(cascade = PERSIST)
+	@JoinColumn(name = "billing_addr_id")
+	private Address billingAddress;
 
-    @Temporal(TIMESTAMP)
-    @Column(name = "created_on")
-    private Date createdOn;
+	@OneToOne(cascade = PERSIST)
+	@JoinColumn(name = "payment_id")
+	private Payment payment;
 
-    public Order()
-    {
-        this.items = new HashSet<>();
-        this.status = OrderStatus.NEW;
-        this.createdOn = new Date();
-    }
+	@Enumerated(STRING)
+	private OrderStatus status;
 
-    public BigDecimal getTotalAmount()
-    {
-        BigDecimal amount = new BigDecimal("0.0");
-        for (OrderItem item : items)
-        {
-            amount = amount.add(item.getSubTotal());
-        }
-        return amount;
-    }
+	@Temporal(TIMESTAMP)
+	@Column(name = "created_on")
+	private Date createdOn;
+
+	public Order() {
+		this.items = new HashSet<>();
+		this.status = OrderStatus.NEW;
+		this.createdOn = new Date();
+	}
+
+	public BigDecimal getTotalAmount() {
+		BigDecimal amount = new BigDecimal("0.0");
+		for (OrderItem item : items) {
+			amount = amount.add(item.getSubTotal());
+		}
+		return amount;
+	}
 
 }

@@ -38,56 +38,55 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductForm
-{
-    private Integer id;
+public class ProductForm {
 
-    @NotEmpty
-    private String sku;
+	private Integer id;
 
-    @NotEmpty
-    private String name;
+	@NotEmpty
+	private String sku;
 
-    private String description;
+	@NotEmpty
+	private String name;
 
-    @NotNull
-    @DecimalMin("0.1")
-    private BigDecimal price;
+	private String description;
 
-    private String imageUrl;
+	@NotNull
+	@DecimalMin("0.1")
+	private BigDecimal price;
 
-    private MultipartFile image;
+	private String imageUrl;
 
-    private boolean disabled;
+	private MultipartFile image;
 
-    @NotNull
-    private Integer categoryId;
+	private boolean disabled;
 
-    public Product toProduct()
-    {
-        Product product = new Product();
-        product.setId(id);
-        product.setName(name);
-        product.setDescription(description);
-        product.setDisabled(disabled);
-        product.setPrice(price);
-        product.setSku(sku);
-        Category category = new Category();
-        category.setId(categoryId);
-        product.setCategory(category);
-        return product;
-    }
+	@NotNull
+	private Integer categoryId;
 
-    public static ProductForm fromProduct(Product product)
-    {
-        ProductForm productForm = new ProductForm();
-        productForm.setId(product.getId());
-        productForm.setName(product.getName());
-        productForm.setDescription(product.getDescription());
-        productForm.setDisabled(product.isDisabled());
-        productForm.setPrice(product.getPrice());
-        productForm.setSku(product.getSku());
-        productForm.setCategoryId(product.getCategory().getId());
-        return productForm;
-    }
+	public Product toProduct() {
+		Product product = new Product();
+		product.setId(id);
+		product.setName(name);
+		product.setDescription(description);
+		product.setDisabled(disabled);
+		product.setPrice(price);
+		product.setSku(sku);
+		Category category = new Category();
+		category.setId(categoryId);
+		product.setCategory(category);
+		return product;
+	}
+
+	public static ProductForm fromProduct(Product product) {
+		ProductForm productForm = new ProductForm();
+		productForm.setId(product.getId());
+		productForm.setName(product.getName());
+		productForm.setDescription(product.getDescription());
+		productForm.setDisabled(product.isDisabled());
+		productForm.setPrice(product.getPrice());
+		productForm.setSku(product.getSku());
+		productForm.setCategoryId(product.getCategory().getId());
+		return productForm;
+	}
+
 }

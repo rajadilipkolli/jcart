@@ -22,36 +22,32 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class OrderService
-{
-    private final OrderRepository orderRepository;
+public class OrderService {
 
-    public Order createOrder(Order order)
-    {
-        order.setOrderNumber(String.valueOf(System.currentTimeMillis()));
-        Order savedOrder = orderRepository.save(order);
-        log.info("New order created. Order Number : {}", savedOrder.getOrderNumber());
-        return savedOrder;
-    }
+	private final OrderRepository orderRepository;
 
-    public Order getOrder(String orderNumber)
-    {
-        return orderRepository.findByOrderNumber(orderNumber);
-    }
+	public Order createOrder(Order order) {
+		order.setOrderNumber(String.valueOf(System.currentTimeMillis()));
+		Order savedOrder = orderRepository.save(order);
+		log.info("New order created. Order Number : {}", savedOrder.getOrderNumber());
+		return savedOrder;
+	}
 
-    public List<Order> getAllOrders()
-    {
-        Sort sort = new Sort(DESC, "createdOn");
-        return orderRepository.findAll(sort);
-    }
+	public Order getOrder(String orderNumber) {
+		return orderRepository.findByOrderNumber(orderNumber);
+	}
 
-    public Order updateOrder(Order order)
-    {
-        Order persistOrder = getOrder(order.getOrderNumber());
-        persistOrder.setStatus(order.getStatus());
-        Order savedOrder = orderRepository.save(persistOrder);
-        log.info("Updated Order with Order Number : {}", savedOrder.getOrderNumber());
-        return savedOrder;
-    }
+	public List<Order> getAllOrders() {
+		Sort sort = new Sort(DESC, "createdOn");
+		return orderRepository.findAll(sort);
+	}
+
+	public Order updateOrder(Order order) {
+		Order persistOrder = getOrder(order.getOrderNumber());
+		persistOrder.setStatus(order.getStatus());
+		Order savedOrder = orderRepository.save(persistOrder);
+		log.info("Updated Order with Order Number : {}", savedOrder.getOrderNumber());
+		return savedOrder;
+	}
 
 }

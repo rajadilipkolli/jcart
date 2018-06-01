@@ -28,49 +28,44 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class ProductController extends AbstractJCartSiteController
-{
-    private final CatalogService catalogService;
+public class ProductController extends AbstractJCartSiteController {
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return "Product";
-    }
+	private final CatalogService catalogService;
 
-    @RequestMapping("/products/{sku}")
-    public String product(@PathVariable String sku, Model model)
-    {
-        Product product = catalogService.getProductBySku(sku);
-        model.addAttribute("product", product);
-        return "product";
-    }
+	@Override
+	protected String getHeaderTitle() {
+		return "Product";
+	}
 
-    @RequestMapping("/products")
-    public String searchProducts(
-            @RequestParam(name = "q", defaultValue = "") String query, Model model)
-    {
-        List<Product> products = catalogService.searchProducts(query);
-        model.addAttribute("products", products);
-        return "products";
-    }
+	@RequestMapping("/products/{sku}")
+	public String product(@PathVariable String sku, Model model) {
+		Product product = catalogService.getProductBySku(sku);
+		model.addAttribute("product", product);
+		return "product";
+	}
 
-    @GetMapping(value = "/products/images/{productId}")
-    public void showProductImage(@PathVariable String productId,
-            HttpServletRequest request, HttpServletResponse response)
-    {
-        try
-        {
-            FileSystemResource file = new FileSystemResource(
-                    WebUtils.IMAGES_DIR + productId + ".jpg");
-            response.setContentType("image/jpg");
-            org.apache.commons.io.IOUtils.copy(file.getInputStream(),
-                    response.getOutputStream());
-            response.flushBuffer();
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage(), e);
-        }
-    }
+	@RequestMapping("/products")
+	public String searchProducts(
+			@RequestParam(name = "q", defaultValue = "") String query, Model model) {
+		List<Product> products = catalogService.searchProducts(query);
+		model.addAttribute("products", products);
+		return "products";
+	}
+
+	@GetMapping(value = "/products/images/{productId}")
+	public void showProductImage(@PathVariable String productId,
+			HttpServletRequest request, HttpServletResponse response) {
+		try {
+			FileSystemResource file = new FileSystemResource(
+					WebUtils.IMAGES_DIR + productId + ".jpg");
+			response.setContentType("image/jpg");
+			org.apache.commons.io.IOUtils.copy(file.getInputStream(),
+					response.getOutputStream());
+			response.flushBuffer();
+		}
+		catch (IOException e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
 }

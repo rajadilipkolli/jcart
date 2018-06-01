@@ -30,20 +30,18 @@ import com.sivalabs.jcart.site.web.models.Cart;
  */
 @Controller
 
-public class CartController extends AbstractJCartSiteController
-{
-    @Override
-    protected String getHeaderTitle()
-    {
-        return "Cart";
-    }
+public class CartController extends AbstractJCartSiteController {
 
-    @GetMapping(value = "/cart")
-    public String showCart(HttpServletRequest request, Model model)
-    {
-        Cart cart = getOrCreateCart(request);
-        model.addAttribute("cart", cart);
-        return "cart";
-    }
+	@Override
+	protected String getHeaderTitle() {
+		return "Cart";
+	}
+
+	@GetMapping(value = "/cart")
+	public String showCart(HttpServletRequest request, Model model) {
+		Cart cart = getOrCreateCart(request);
+		model.addAttribute("cart", cart);
+		return "cart";
+	}
 
 }

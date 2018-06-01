@@ -23,24 +23,22 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @Secured(MANAGE_PERMISSIONS)
 @RequiredArgsConstructor
-public class PermissionController extends AbstractJCartAdminController
-{
-    private static final String VIEWPREFIX = "permissions/";
+public class PermissionController extends AbstractJCartAdminController {
 
-    private final SecurityService securityService;
+	private static final String VIEWPREFIX = "permissions/";
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return PERMISSIONTITLE;
-    }
+	private final SecurityService securityService;
 
-    @GetMapping(value = "/permissions")
-    public String listPermissions(Model model)
-    {
-        List<Permission> list = securityService.getAllPermissions();
-        model.addAttribute("permissions", list);
-        return VIEWPREFIX + "permissions";
-    }
+	@Override
+	protected String getHeaderTitle() {
+		return PERMISSIONTITLE;
+	}
+
+	@GetMapping(value = "/permissions")
+	public String listPermissions(Model model) {
+		List<Permission> list = securityService.getAllPermissions();
+		model.addAttribute("permissions", list);
+		return VIEWPREFIX + "permissions";
+	}
 
 }

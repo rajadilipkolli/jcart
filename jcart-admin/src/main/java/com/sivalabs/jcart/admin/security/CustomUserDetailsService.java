@@ -36,20 +36,17 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService
-{
+public class CustomUserDetailsService implements UserDetailsService {
 
-    private final SecurityService securityService;
+	private final SecurityService securityService;
 
-    @Override
-    public UserDetails loadUserByUsername(String userEmail)
-    {
-        User user = securityService.findUserByEmail(userEmail);
-        if (isNull(user))
-        {
-            throw new UsernameNotFoundException("Email " + userEmail + " not found");
-        }
-        return new AuthenticatedUser(user);
-    }
+	@Override
+	public UserDetails loadUserByUsername(String userEmail) {
+		User user = securityService.findUserByEmail(userEmail);
+		if (isNull(user)) {
+			throw new UsernameNotFoundException("Email " + userEmail + " not found");
+		}
+		return new AuthenticatedUser(user);
+	}
 
 }

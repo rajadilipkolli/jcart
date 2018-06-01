@@ -35,68 +35,60 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Cart implements Serializable
-{
-    private static final long serialVersionUID = 1L;
+public class Cart implements Serializable {
 
-    private List<LineItem> items;
-    private Customer customer;
-    private Address deliveryAddress;
-    private Payment payment;
+	private static final long serialVersionUID = 1L;
 
-    public Cart()
-    {
-        items = new ArrayList<>();
-        customer = new Customer();
-        deliveryAddress = new Address();
-        payment = new Payment();
-    }
+	private List<LineItem> items;
 
-    public void addItem(Product product)
-    {
-        for (LineItem lineItem : items)
-        {
-            if (lineItem.getProduct().getSku().equals(product.getSku()))
-            {
-                lineItem.setQuantity(lineItem.getQuantity() + 1);
-                return;
-            }
-        }
-        LineItem item = new LineItem(product, 1);
-        this.items.add(item);
-    }
+	private Customer customer;
 
-    public void updateItemQuantity(Product product, int quantity)
-    {
-        for (LineItem lineItem : items)
-        {
-            if (lineItem.getProduct().getSku().equals(product.getSku()))
-            {
-                lineItem.setQuantity(quantity);
-            }
-        }
+	private Address deliveryAddress;
 
-    }
+	private Payment payment;
 
-    public void removeItem(String sku)
-    {
-        items.removeIf(lineItem -> lineItem.getProduct().getSku().equals(sku));
-    }
+	public Cart() {
+		items = new ArrayList<>();
+		customer = new Customer();
+		deliveryAddress = new Address();
+		payment = new Payment();
+	}
 
-    public void clearItems()
-    {
-        items = new ArrayList<>();
-    }
+	public void addItem(Product product) {
+		for (LineItem lineItem : items) {
+			if (lineItem.getProduct().getSku().equals(product.getSku())) {
+				lineItem.setQuantity(lineItem.getQuantity() + 1);
+				return;
+			}
+		}
+		LineItem item = new LineItem(product, 1);
+		this.items.add(item);
+	}
 
-    public int getItemCount()
-    {
-        return items.stream().mapToInt(LineItem::getQuantity).sum();
-    }
+	public void updateItemQuantity(Product product, int quantity) {
+		for (LineItem lineItem : items) {
+			if (lineItem.getProduct().getSku().equals(product.getSku())) {
+				lineItem.setQuantity(quantity);
+			}
+		}
 
-    public BigDecimal getTotalAmount()
-    {
-        return items.stream().map(LineItem::getSubTotal).reduce(BigDecimal.ZERO,
-                BigDecimal::add);
-    }
+	}
+
+	public void removeItem(String sku) {
+		items.removeIf(lineItem -> lineItem.getProduct().getSku().equals(sku));
+	}
+
+	public void clearItems() {
+		items = new ArrayList<>();
+	}
+
+	public int getItemCount() {
+		return items.stream().mapToInt(LineItem::getQuantity).sum();
+	}
+
+	public BigDecimal getTotalAmount() {
+		return items.stream().map(LineItem::getSubTotal).reduce(BigDecimal.ZERO,
+				BigDecimal::add);
+	}
 
 }

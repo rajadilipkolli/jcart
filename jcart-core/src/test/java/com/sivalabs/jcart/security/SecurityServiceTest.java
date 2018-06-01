@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.security;
 
@@ -29,186 +29,181 @@ import com.sivalabs.jcart.security.impl.SecurityServiceImpl;
  */
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class SecurityServiceTest
-{
+public class SecurityServiceTest {
 
-    private static final String email = "JUNIT_EMAIL@EMAIL.COM";
-    private static final String name = "JUNIT_NAME";
-    private static final String password = "JUNIT_PASSWORD";
-    private static final String description = "JUNIT_DESCRIPTION";
-    
-    @Autowired
-    TestEntityManager testEntityManager;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PermissionRepository permissionRepository;
-    @Autowired
-    private RoleRepository roleRepository;
+	private static final String email = "JUNIT_EMAIL@EMAIL.COM";
 
-    SecurityService securityService;
-    private User user = new User();
+	private static final String name = "JUNIT_NAME";
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception
-    {
-        user.setName(name);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setRoles(new ArrayList<Role>());
-        user.setPasswordResetToken("token");
-        testEntityManager.persist(user);
-        securityService = new SecurityServiceImpl(userRepository, permissionRepository,
-                roleRepository);
-    }
+	private static final String password = "JUNIT_PASSWORD";
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.security.SecurityService#resetPassword(java.lang.String)}.
-     */
-    @Test(expected = JCartException.class)
-    public void testResetPassword()
-    {
-        String uuid = securityService.resetPassword(email);
-        assertNotNull(uuid);
-        securityService.resetPassword(name);
-    }
+	private static final String description = "JUNIT_DESCRIPTION";
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.security.SecurityService#updatePassword(java.lang.String, java.lang.String, java.lang.String)}.
-     */
-    @Test(expected = JCartException.class)
-    public void testUpdatePasswordInValidPassword()
-    {
-        securityService.updatePassword(email, "token1s", password);
-    }
+	@Autowired
+	TestEntityManager testEntityManager;
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.security.SecurityService#verifyPasswordResetToken(java.lang.String, java.lang.String)}.
-     */
-    @Test(expected=JCartException.class)
-    public void testVerifyPasswordResetToken()
-    {
-        boolean verified = securityService.verifyPasswordResetToken(email, "token");
-        assertTrue(verified);
-        boolean verified1 = securityService.verifyPasswordResetToken(email, "token1");
-        assertFalse(verified1);
-        securityService.verifyPasswordResetToken("ABC@ABC.COM", "token");
-    }
+	@Autowired
+	private UserRepository userRepository;
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.security.SecurityService#getAllPermissions()}.
-     */
-    @Test
-    public void testGetAllPermissions()
-    {
-        List<Permission> perList = securityService.getAllPermissions();
-        assertTrue(perList.isEmpty());
-    }
+	@Autowired
+	private PermissionRepository permissionRepository;
 
-    /**
-     * Test method for {@link com.sivalabs.jcart.security.SecurityService#getAllRoles()}.
-     */
-    @Test
-    public void testGetAllRoles()
-    {
-        List<Role> rolesList = securityService.getAllRoles();
-        assertTrue(rolesList.isEmpty());
-    }
+	@Autowired
+	private RoleRepository roleRepository;
 
-    /**
-     * Test method for {@link com.sivalabs.jcart.security.SecurityService#getAllUsers()}.
-     */
-    @Test
-    public void testGetAllUsers()
-    {
-        List<User> userList = securityService.getAllUsers();
-        assertFalse(userList.isEmpty());
-    }
+	SecurityService securityService;
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.security.SecurityService#createUser(com.sivalabs.jcart.entities.User)}.
-     */
-    @Test(expected = JCartException.class)
-    public void testCreateUser()
-    {
-        User user = new User();
-        user.setEmail("abc@abc.com");
-        user.setName("Name");
-        user.setPassword("Passw");
-        user.setPasswordResetToken("resetToken");
+	private User user = new User();
 
-        Role role = new Role();
-        role.setName(name);
-        List<Permission> permissions = new ArrayList<>();
-        role.setPermissions(permissions);
-        Role dbRole = securityService.createRole(role);
-        assertThat(dbRole).isNotNull();
-        dbRole.setDescription(description);
-        securityService.updateRole(dbRole);
-        dbRole = securityService.getRoleById(dbRole.getId());
-        assertEquals(name, dbRole.getName());
-        assertEquals(description, dbRole.getDescription());
-        List<Role> roles = new ArrayList<>();
-        roles.add(dbRole);
-        user.setRoles(roles);
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		user.setName(name);
+		user.setPassword(password);
+		user.setEmail(email);
+		user.setRoles(new ArrayList<Role>());
+		user.setPasswordResetToken("token");
+		testEntityManager.persist(user);
+		securityService = new SecurityServiceImpl(userRepository, permissionRepository,
+				roleRepository);
+	}
 
-        User dbUser = securityService.createUser(user);
-        assertThat(dbUser.getId()).isNotNull();
-        securityService.updatePassword("abc@abc.com", "resetToken", password);
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.security.SecurityService#resetPassword(java.lang.String)}.
+	 */
+	@Test(expected = JCartException.class)
+	public void testResetPassword() {
+		String uuid = securityService.resetPassword(email);
+		assertNotNull(uuid);
+		securityService.resetPassword(name);
+	}
 
-        User dbUser1 = securityService.getUserById(user.getId());
-        assertEquals(dbUser1.getPassword(), password);
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.security.SecurityService#updatePassword(java.lang.String, java.lang.String, java.lang.String)}.
+	 */
+	@Test(expected = JCartException.class)
+	public void testUpdatePasswordInValidPassword() {
+		securityService.updatePassword(email, "token1s", password);
+	}
 
-        dbUser1.setName("JUNIT1");
-        User dbUser2 = securityService.updateUser(dbUser1);
-        assertEquals("JUNIT1", dbUser2.getName());
-        securityService.createUser(user);
-    }
-    
-    @Test(expected = JCartException.class)
-    public void testCreateRole(){
-        Role role = new Role();
-        role.setName(name);
-        List<Permission> permissions = new ArrayList<>();
-        role.setPermissions(permissions);
-        Role dbrole = securityService.createRole(role);
-        assertThat(dbrole).isNotNull();
-        assertThat(dbrole.getName()).isEqualTo(name);
-        securityService.createRole(role);
-    }
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.security.SecurityService#verifyPasswordResetToken(java.lang.String, java.lang.String)}.
+	 */
+	@Test(expected = JCartException.class)
+	public void testVerifyPasswordResetToken() {
+		boolean verified = securityService.verifyPasswordResetToken(email, "token");
+		assertTrue(verified);
+		boolean verified1 = securityService.verifyPasswordResetToken(email, "token1");
+		assertFalse(verified1);
+		securityService.verifyPasswordResetToken("ABC@ABC.COM", "token");
+	}
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.security.SecurityService#updateUser(com.sivalabs.jcart.entities.User)}.
-     */
-    @Test(expected = JCartException.class)
-    public void testUpdateUser()
-    {
-        User newUser = new User();
-        newUser.setId(50);
-        securityService.updateUser(newUser);
-    }
-    
-    @Test(expected = JCartException.class)
-    public void testUpdateRole()
-    {
-        Role newRole = new Role();
-        newRole.setId(50);
-        securityService.updateRole(newRole);
-    }
-    
-    @Test(expected = JCartException.class)
-    public void testUpdatePassword()
-    {
-        securityService.updatePassword("a@a.com", null, password);
-    }
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.security.SecurityService#getAllPermissions()}.
+	 */
+	@Test
+	public void testGetAllPermissions() {
+		List<Permission> perList = securityService.getAllPermissions();
+		assertTrue(perList.isEmpty());
+	}
+
+	/**
+	 * Test method for {@link com.sivalabs.jcart.security.SecurityService#getAllRoles()}.
+	 */
+	@Test
+	public void testGetAllRoles() {
+		List<Role> rolesList = securityService.getAllRoles();
+		assertTrue(rolesList.isEmpty());
+	}
+
+	/**
+	 * Test method for {@link com.sivalabs.jcart.security.SecurityService#getAllUsers()}.
+	 */
+	@Test
+	public void testGetAllUsers() {
+		List<User> userList = securityService.getAllUsers();
+		assertFalse(userList.isEmpty());
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.security.SecurityService#createUser(com.sivalabs.jcart.entities.User)}.
+	 */
+	@Test(expected = JCartException.class)
+	public void testCreateUser() {
+		User user = new User();
+		user.setEmail("abc@abc.com");
+		user.setName("Name");
+		user.setPassword("Passw");
+		user.setPasswordResetToken("resetToken");
+
+		Role role = new Role();
+		role.setName(name);
+		List<Permission> permissions = new ArrayList<>();
+		role.setPermissions(permissions);
+		Role dbRole = securityService.createRole(role);
+		assertThat(dbRole).isNotNull();
+		dbRole.setDescription(description);
+		securityService.updateRole(dbRole);
+		dbRole = securityService.getRoleById(dbRole.getId());
+		assertEquals(name, dbRole.getName());
+		assertEquals(description, dbRole.getDescription());
+		List<Role> roles = new ArrayList<>();
+		roles.add(dbRole);
+		user.setRoles(roles);
+
+		User dbUser = securityService.createUser(user);
+		assertThat(dbUser.getId()).isNotNull();
+		securityService.updatePassword("abc@abc.com", "resetToken", password);
+
+		User dbUser1 = securityService.getUserById(user.getId());
+		assertEquals(dbUser1.getPassword(), password);
+
+		dbUser1.setName("JUNIT1");
+		User dbUser2 = securityService.updateUser(dbUser1);
+		assertEquals("JUNIT1", dbUser2.getName());
+		securityService.createUser(user);
+	}
+
+	@Test(expected = JCartException.class)
+	public void testCreateRole() {
+		Role role = new Role();
+		role.setName(name);
+		List<Permission> permissions = new ArrayList<>();
+		role.setPermissions(permissions);
+		Role dbrole = securityService.createRole(role);
+		assertThat(dbrole).isNotNull();
+		assertThat(dbrole.getName()).isEqualTo(name);
+		securityService.createRole(role);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.security.SecurityService#updateUser(com.sivalabs.jcart.entities.User)}.
+	 */
+	@Test(expected = JCartException.class)
+	public void testUpdateUser() {
+		User newUser = new User();
+		newUser.setId(50);
+		securityService.updateUser(newUser);
+	}
+
+	@Test(expected = JCartException.class)
+	public void testUpdateRole() {
+		Role newRole = new Role();
+		newRole.setId(50);
+		securityService.updateRole(newRole);
+	}
+
+	@Test(expected = JCartException.class)
+	public void testUpdatePassword() {
+		securityService.updatePassword("a@a.com", null, password);
+	}
 
 }

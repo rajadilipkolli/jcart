@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.admin.web.controllers;
 
@@ -17,46 +17,41 @@ import com.sivalabs.jcart.admin.security.AuthenticatedUser;
  * @author Siva
  *
  */
-public abstract class AbstractJCartAdminController
-{
-    @Autowired
-    protected MessageSource messageSource;
+public abstract class AbstractJCartAdminController {
 
-    protected abstract String getHeaderTitle();
+	@Autowired
+	protected MessageSource messageSource;
 
-    public String getMessage(String code)
-    {
-        return messageSource.getMessage(code, null, null);
-    }
+	protected abstract String getHeaderTitle();
 
-    public String getMessage(String code, String defaultMsg)
-    {
-        return messageSource.getMessage(code, null, defaultMsg, null);
-    }
+	public String getMessage(String code) {
+		return messageSource.getMessage(code, null, null);
+	}
 
-    @ModelAttribute("authenticatedUser")
-    public AuthenticatedUser authenticatedUser(
-            @AuthenticationPrincipal AuthenticatedUser authenticatedUser)
-    {
-        return authenticatedUser;
-    }
+	public String getMessage(String code, String defaultMsg) {
+		return messageSource.getMessage(code, null, defaultMsg, null);
+	}
 
-    public static AuthenticatedUser getCurrentUser()
-    {
+	@ModelAttribute("authenticatedUser")
+	public AuthenticatedUser authenticatedUser(
+			@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+		return authenticatedUser;
+	}
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        if (principal instanceof AuthenticatedUser)
-        {
-            return (AuthenticatedUser) principal;
-        }
-        // principal object is either null or represents anonymous user -
-        // neither of which our domain User object can represent - so return null
-        return null;
-    }
+	public static AuthenticatedUser getCurrentUser() {
 
-    public static boolean isLoggedIn()
-    {
-        return nonNull(getCurrentUser());
-    }
+		Object principal = SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		if (principal instanceof AuthenticatedUser) {
+			return (AuthenticatedUser) principal;
+		}
+		// principal object is either null or represents anonymous user -
+		// neither of which our domain User object can represent - so return null
+		return null;
+	}
+
+	public static boolean isLoggedIn() {
+		return nonNull(getCurrentUser());
+	}
+
 }

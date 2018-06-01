@@ -50,35 +50,36 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Product implements Serializable
-{
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id")
-    private Integer id;
-    
-    @Column(unique = true, nullable = false)
-    private String sku;
-    
-    @Column(nullable = false)
-    private String name;
-    
-    private String description;
-    
-    @Column(nullable = false)
-    private BigDecimal price = new BigDecimal("0.0");
-    
-    private String imageUrl;
-    
-    private boolean disabled;
-    
-    @Temporal(TIMESTAMP)
-    @Column(name = "created_on")
-    private Date createdOn = new Date();
+public class Product implements Serializable {
 
-    @ManyToOne
-    @JoinColumn(name = "cat_id")
-    private Category category;
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id")
+	private Integer id;
+
+	@Column(unique = true, nullable = false)
+	private String sku;
+
+	@Column(nullable = false)
+	private String name;
+
+	private String description;
+
+	@Column(nullable = false)
+	private BigDecimal price = new BigDecimal("0.0");
+
+	private String imageUrl;
+
+	private boolean disabled;
+
+	@Temporal(TIMESTAMP)
+	@Column(name = "created_on")
+	private Date createdOn = new Date();
+
+	@ManyToOne
+	@JoinColumn(name = "cat_id")
+	private Category category;
 
 }

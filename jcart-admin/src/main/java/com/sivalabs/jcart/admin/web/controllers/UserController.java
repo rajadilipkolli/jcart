@@ -35,112 +35,101 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Secured(SecurityUtil.MANAGE_USERS)
 @RequiredArgsConstructor
-public class UserController extends AbstractJCartAdminController
-{
-    private static final String VIEWPREFIX = "users/";
-    
-    private final SecurityService securityService;
-    private final UserValidator userValidator;
-    private final PasswordEncoder passwordEncoder;
+public class UserController extends AbstractJCartAdminController {
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return "Manage Users";
-    }
+	private static final String VIEWPREFIX = "users/";
 
-    @ModelAttribute("rolesList")
-    public List<Role> rolesList()
-    {
-        return securityService.getAllRoles();
-    }
+	private final SecurityService securityService;
 
-    @GetMapping(value = "/users")
-    public String listUsers(Model model)
-    {
-        List<User> list = securityService.getAllUsers();
-        model.addAttribute("users", list);
-        return VIEWPREFIX + "users";
-    }
+	private final UserValidator userValidator;
 
-    @GetMapping(value = "/users/new")
-    public String createUserForm(Model model)
-    {
-        User user = new User();
-        model.addAttribute("user", user);
-        return VIEWPREFIX + "create_user";
-    }
+	private final PasswordEncoder passwordEncoder;
 
-    @PostMapping(value = "/users")
-    public String createUser(@Valid @ModelAttribute("user") User user,
-            BindingResult result, Model model, RedirectAttributes redirectAttributes)
-    {
-        userValidator.validate(user, result);
-        if (result.hasErrors())
-        {
-            return VIEWPREFIX + "create_user";
-        }
-        String password = user.getPassword();
-        String encodedPwd = passwordEncoder.encode(password);
-        user.setPassword(encodedPwd);
-        User persistedUser = securityService.createUser(user);
-        log.debug("Created new User with id : {} and name : {}", persistedUser.getId(),
-                persistedUser.getName());
-        redirectAttributes.addFlashAttribute("info", "User created successfully");
-        return "redirect:/users";
-    }
+	@Override
+	protected String getHeaderTitle() {
+		return "Manage Users";
+	}
 
-    @GetMapping(value = "/users/{id}")
-    public String editUserForm(@PathVariable Integer id, Model model)
-    {
-        User user = securityService.getUserById(id);
-        Map<Integer, Role> assignedRoleMap = new HashMap<>();
-        List<Role> roles = user.getRoles();
-        for (Role role : roles)
-        {
-            assignedRoleMap.put(role.getId(), role);
-        }
+	@ModelAttribute("rolesList")
+	public List<Role> rolesList() {
+		return securityService.getAllRoles();
+	}
 
-        List<Role> userRoles = new ArrayList<>();
-        List<Role> allRoles = securityService.getAllRoles();
-        for (Role role : allRoles)
-        {
-            if (assignedRoleMap.containsKey(role.getId()))
-            {
-                userRoles.add(role);
-            }
-            else
-            {
-                userRoles.add(null);
-            }
-        }
-        user.setRoles(userRoles);
+	@GetMapping(value = "/users")
+	public String listUsers(Model model) {
+		List<User> list = securityService.getAllUsers();
+		model.addAttribute("users", list);
+		return VIEWPREFIX + "users";
+	}
 
-        model.addAttribute("user", user);
-        return VIEWPREFIX + "edit_user";
-    }
+	@GetMapping(value = "/users/new")
+	public String createUserForm(Model model) {
+		User user = new User();
+		model.addAttribute("user", user);
+		return VIEWPREFIX + "create_user";
+	}
 
-    @PostMapping(value = "/users/{id}")
-    public String updateUser(@ModelAttribute("user") User user, BindingResult result,
-            Model model, RedirectAttributes redirectAttributes)
-    {
-        if (result.hasErrors())
-        {
-            return VIEWPREFIX + "edit_user";
-        }
-        User persistedUser = securityService.updateUser(user);
-        log.debug("Updated user with id : {} and name : {}", persistedUser.getId(),
-                persistedUser.getName());
-        redirectAttributes.addFlashAttribute("info", "User updates successfully");
-        return "redirect:/users";
-    }
+	@PostMapping(value = "/users")
+	public String createUser(@Valid @ModelAttribute("user") User user,
+			BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+		userValidator.validate(user, result);
+		if (result.hasErrors()) {
+			return VIEWPREFIX + "create_user";
+		}
+		String password = user.getPassword();
+		String encodedPwd = passwordEncoder.encode(password);
+		user.setPassword(encodedPwd);
+		User persistedUser = securityService.createUser(user);
+		log.debug("Created new User with id : {} and name : {}", persistedUser.getId(),
+				persistedUser.getName());
+		redirectAttributes.addFlashAttribute("info", "User created successfully");
+		return "redirect:/users";
+	}
 
-    @GetMapping(value = "/myAccount")
-    public String myAccount(Model model)
-    {
-        Integer userId = getCurrentUser().getUser().getId();
-        User user = securityService.getUserById(userId);
-        model.addAttribute("user", user);
-        return "myAccount";
-    }
+	@GetMapping(value = "/users/{id}")
+	public String editUserForm(@PathVariable Integer id, Model model) {
+		User user = securityService.getUserById(id);
+		Map<Integer, Role> assignedRoleMap = new HashMap<>();
+		List<Role> roles = user.getRoles();
+		for (Role role : roles) {
+			assignedRoleMap.put(role.getId(), role);
+		}
+
+		List<Role> userRoles = new ArrayList<>();
+		List<Role> allRoles = securityService.getAllRoles();
+		for (Role role : allRoles) {
+			if (assignedRoleMap.containsKey(role.getId())) {
+				userRoles.add(role);
+			}
+			else {
+				userRoles.add(null);
+			}
+		}
+		user.setRoles(userRoles);
+
+		model.addAttribute("user", user);
+		return VIEWPREFIX + "edit_user";
+	}
+
+	@PostMapping(value = "/users/{id}")
+	public String updateUser(@ModelAttribute("user") User user, BindingResult result,
+			Model model, RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			return VIEWPREFIX + "edit_user";
+		}
+		User persistedUser = securityService.updateUser(user);
+		log.debug("Updated user with id : {} and name : {}", persistedUser.getId(),
+				persistedUser.getName());
+		redirectAttributes.addFlashAttribute("info", "User updates successfully");
+		return "redirect:/users";
+	}
+
+	@GetMapping(value = "/myAccount")
+	public String myAccount(Model model) {
+		Integer userId = getCurrentUser().getUser().getId();
+		User user = securityService.getUserById(userId);
+		model.addAttribute("user", user);
+		return "myAccount";
+	}
+
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart;
 
@@ -19,15 +19,14 @@ import com.sivalabs.jcart.admin.web.controllers.HomeController;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JCartAdminApplication.class)
-public class JCartAdminApplicationTest
-{
-    @Autowired
-    private HomeController homeController;
+public class JCartAdminApplicationTest {
 
-    @Test
-    public void contextLoads()
-    {
-        assertThat(homeController).isNotNull();
-    }
+	@Autowired
+	private HomeController homeController;
+
+	@Test
+	public void contextLoads() {
+		assertThat(homeController).isNotNull();
+	}
 
 }

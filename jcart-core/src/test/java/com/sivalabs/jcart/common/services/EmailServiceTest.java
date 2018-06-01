@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.common.services;
 
@@ -26,53 +26,49 @@ import com.icegreen.greenmail.util.ServerSetupTest;
  *
  */
 @RunWith(SpringRunner.class)
-public class EmailServiceTest
-{
+public class EmailServiceTest {
 
-    @MockBean
-    private EmailService emailService;
+	@MockBean
+	private EmailService emailService;
 
-    private GreenMail testSmtp;
+	private GreenMail testSmtp;
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception
-    {
-        testSmtp = new GreenMail(ServerSetupTest.SMTP);
-        testSmtp.start();
-    }
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@Before
+	public void setUp() throws Exception {
+		testSmtp = new GreenMail(ServerSetupTest.SMTP);
+		testSmtp.start();
+	}
 
-    /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception
-    {
-        testSmtp.stop();
-    }
+	/**
+	 * @throws java.lang.Exception
+	 */
+	@After
+	public void tearDown() throws Exception {
+		testSmtp.stop();
+	}
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.common.services.EmailService#sendEmail(java.lang.String, java.lang.String, java.lang.String)}.
-     */
-    @Test
-    public void testSendEmail()
-    {
-        doNothing().when(emailService).sendEmail(anyString(), anyString(), anyString());
-        emailService.sendEmail("rajadileepkolli@gmail.com", "JCart - Test Mail",
-                "This is a test email from JCart");
-        assertNotNull(emailService);
-    }
-    
-    @Test(expected=MailException.class)
-    public void testSendEmailWithException()
-    {
-        doThrow(new MailSendException("JUNIT EMAIL")).when(emailService).sendEmail(anyString(), anyString(), any());
-        emailService.sendEmail("rajadileepkolli@gmail.com", "JCart - Test Mail",
-                "This is a test email from JCart");
-        assertNotNull(emailService);
-    }
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.common.services.EmailService#sendEmail(java.lang.String, java.lang.String, java.lang.String)}.
+	 */
+	@Test
+	public void testSendEmail() {
+		doNothing().when(emailService).sendEmail(anyString(), anyString(), anyString());
+		emailService.sendEmail("rajadileepkolli@gmail.com", "JCart - Test Mail",
+				"This is a test email from JCart");
+		assertNotNull(emailService);
+	}
+
+	@Test(expected = MailException.class)
+	public void testSendEmailWithException() {
+		doThrow(new MailSendException("JUNIT EMAIL")).when(emailService)
+				.sendEmail(anyString(), anyString(), any());
+		emailService.sendEmail("rajadileepkolli@gmail.com", "JCart - Test Mail",
+				"This is a test email from JCart");
+		assertNotNull(emailService);
+	}
 
 }

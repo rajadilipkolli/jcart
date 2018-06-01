@@ -17,42 +17,31 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
 @RequiredArgsConstructor
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter
-{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService customUserDetailsService;
+	private final UserDetailsService customUserDetailsService;
 
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder()
-    {
-        return new BCryptPasswordEncoder();
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable().authorizeRequests()
+				.antMatchers("/resources/**", "/webjars/**", "/assets/**").permitAll()
+				.antMatchers("/", "/register", "/forgotPwd", "/resetPwd").permitAll()
+				.antMatchers("/myAccount", "/checkout", "/orders").authenticated().and()
+				.formLogin().loginPage("/login").defaultSuccessUrl("/home")
+				.failureUrl("/login?error").permitAll().and().logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll()
+				.and().exceptionHandling().accessDeniedPage("/403");
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception
-    {
-        http.csrf().disable()
-            .authorizeRequests()
-                .antMatchers("/resources/**", "/webjars/**", "/assets/**").permitAll()
-                .antMatchers("/", "/register", "/forgotPwd", "/resetPwd").permitAll()
-                .antMatchers("/myAccount", "/checkout", "/orders").authenticated()
-            .and()
-                .formLogin()
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/home")
-                    .failureUrl("/login?error").permitAll()
-            .and()
-                .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll()
-            .and()
-                .exceptionHandling().accessDeniedPage("/403");
-    }
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(customUserDetailsService)
+				.passwordEncoder(passwordEncoder());
+	}
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
-    {
-        auth.userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
 }

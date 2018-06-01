@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.catalog;
 
@@ -21,33 +21,33 @@ import com.sivalabs.jcart.entities.Category;
  */
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class CategoryRepositoryTest
-{
+public class CategoryRepositoryTest {
 
-    @Autowired
-    TestEntityManager testEntityManager;
-    @Autowired
-    CategoryRepository categoryRepository;
+	@Autowired
+	TestEntityManager testEntityManager;
 
-    private String description = "JUNIT Description";
-    private String name = "JUNIT";
+	@Autowired
+	CategoryRepository categoryRepository;
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.catalog.CategoryRepository#getByName(java.lang.String)}.
-     */
-    @Test
-    public void testGetByName()
-    {
-        Category category = new Category();
-        category.setName(name);
-        category.setDescription(description);
-        testEntityManager.persist(category);
+	private String description = "JUNIT Description";
 
-        Category persistedCategory = categoryRepository.getByName(name);
-        assertNotNull(persistedCategory);
-        assertNotNull(persistedCategory.getId());
-        assertEquals(description, persistedCategory.getDescription());
-    }
+	private String name = "JUNIT";
+
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.catalog.CategoryRepository#getByName(java.lang.String)}.
+	 */
+	@Test
+	public void testGetByName() {
+		Category category = new Category();
+		category.setName(name);
+		category.setDescription(description);
+		testEntityManager.persist(category);
+
+		Category persistedCategory = categoryRepository.getByName(name);
+		assertNotNull(persistedCategory);
+		assertNotNull(persistedCategory.getId());
+		assertEquals(description, persistedCategory.getDescription());
+	}
 
 }

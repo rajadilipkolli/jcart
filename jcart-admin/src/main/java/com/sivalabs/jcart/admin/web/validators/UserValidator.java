@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.admin.web.validators;
 
@@ -19,30 +19,28 @@ import com.sivalabs.jcart.security.SecurityService;
  *
  */
 @Component
-public class UserValidator implements Validator
-{
-    @Autowired
-    protected MessageSource messageSource;
-    @Autowired
-    protected SecurityService securityService;
+public class UserValidator implements Validator {
 
-    @Override
-    public boolean supports(Class<?> clazz)
-    {
-        return User.class.isAssignableFrom(clazz);
-    }
+	@Autowired
+	protected MessageSource messageSource;
 
-    @Override
-    public void validate(Object target, Errors errors)
-    {
-        User user = (User) target;
-        String email = user.getEmail();
-        User userByEmail = securityService.findUserByEmail(email);
-        if (nonNull(userByEmail))
-        {
-            errors.rejectValue("email", "error.exists", new Object[] { email },
-                    "Email " + email + " already in use");
-        }
-    }
+	@Autowired
+	protected SecurityService securityService;
+
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return User.class.isAssignableFrom(clazz);
+	}
+
+	@Override
+	public void validate(Object target, Errors errors) {
+		User user = (User) target;
+		String email = user.getEmail();
+		User userByEmail = securityService.findUserByEmail(email);
+		if (nonNull(userByEmail)) {
+			errors.rejectValue("email", "error.exists", new Object[] { email },
+					"Email " + email + " already in use");
+		}
+	}
 
 }

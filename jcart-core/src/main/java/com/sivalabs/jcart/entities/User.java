@@ -29,34 +29,34 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-public class User implements Serializable
-{
-    private static final long serialVersionUID = 1L;
+public class User implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = AUTO)
-    private Integer id;
+	private static final long serialVersionUID = 1L;
 
-    @NotEmpty()
-    @Column(nullable = false)
-    private String name;
+	@Id
+	@GeneratedValue(strategy = AUTO)
+	private Integer id;
 
-    @NotEmpty
-    @Email(message = "{errors.invalid_email}")
-    @Column(unique = true, nullable = false)
-    private String email;
+	@NotEmpty()
+	@Column(nullable = false)
+	private String name;
 
-    @NotEmpty
-    @Size(min = 4)
-    @Column(nullable = false)
-    private String password;
+	@NotEmpty
+	@Email(message = "{errors.invalid_email}")
+	@Column(unique = true, nullable = false)
+	private String email;
 
-    private String passwordResetToken;
+	@NotEmpty
+	@Size(min = 4)
+	@Column(nullable = false)
+	private String password;
 
-    @ManyToMany(cascade = MERGE)
-    @JoinTable(name = "user_role", joinColumns = {
-            @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
-                    @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID") })
-    private List<Role> roles;
+	private String passwordResetToken;
+
+	@ManyToMany(cascade = MERGE)
+	@JoinTable(name = "user_role", joinColumns = {
+			@JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID") })
+	private List<Role> roles;
 
 }

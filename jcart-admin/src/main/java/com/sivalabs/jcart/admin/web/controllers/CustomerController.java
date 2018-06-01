@@ -18,41 +18,37 @@ import com.sivalabs.jcart.entities.Customer;
  */
 @Controller
 @Secured(SecurityUtil.MANAGE_CUSTOMERS)
-public class CustomerController extends AbstractJCartAdminController
-{
-    private static final String VIEWPREFIX = "customers/";
+public class CustomerController extends AbstractJCartAdminController {
 
-    private CustomerService customerService;
+	private static final String VIEWPREFIX = "customers/";
 
-    /**
-     * @param customerService
-     */
-    public CustomerController(CustomerService customerService)
-    {
-        super();
-        this.customerService = customerService;
-    }
+	private CustomerService customerService;
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return "Manage Customers";
-    }
+	/**
+	 * @param customerService
+	 */
+	public CustomerController(CustomerService customerService) {
+		super();
+		this.customerService = customerService;
+	}
 
-    @GetMapping(value = "/customers")
-    public String listCustomers(Model model)
-    {
-        List<Customer> list = customerService.getAllCustomers();
-        model.addAttribute("customers", list);
-        return VIEWPREFIX + "customers";
-    }
+	@Override
+	protected String getHeaderTitle() {
+		return "Manage Customers";
+	}
 
-    @GetMapping(value = "/customers/{id}")
-    public String viewCustomerForm(@PathVariable Integer id, Model model)
-    {
-        Customer customer = customerService.getCustomerById(id);
-        model.addAttribute("customer", customer);
-        return VIEWPREFIX + "view_customer";
-    }
+	@GetMapping(value = "/customers")
+	public String listCustomers(Model model) {
+		List<Customer> list = customerService.getAllCustomers();
+		model.addAttribute("customers", list);
+		return VIEWPREFIX + "customers";
+	}
+
+	@GetMapping(value = "/customers/{id}")
+	public String viewCustomerForm(@PathVariable Integer id, Model model) {
+		Customer customer = customerService.getCustomerById(id);
+		model.addAttribute("customer", customer);
+		return VIEWPREFIX + "view_customer";
+	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.customers;
 
@@ -26,88 +26,86 @@ import com.sivalabs.jcart.entities.Order;
  */
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class CustomerServiceTest
-{
+public class CustomerServiceTest {
 
-    @Autowired
-    TestEntityManager testEntityManager;
-    @Autowired
-    CustomerRepository customerRepository;
+	@Autowired
+	TestEntityManager testEntityManager;
 
-    CustomerService customerService;
-    private String email = "abc@abc.com";
-    private String firstName = "JUNIT FirstName";
-    private String lastName = "JUNIT LastName";
-    private String password = "password";
+	@Autowired
+	CustomerRepository customerRepository;
 
-    Customer customer = new Customer();
+	CustomerService customerService;
 
-    @Before
-    public void setUp()
-    {
-        customer.setEmail(email);
-        customer.setFirstName(firstName);
-        customer.setLastName(lastName);
-        customer.setPassword(password);
-        testEntityManager.persist(customer);
-        customerService = new CustomerServiceImpl(customerRepository);
-    }
+	private String email = "abc@abc.com";
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.customers.CustomerService#getCustomerByEmail(java.lang.String)}.
-     */
-    @Test
-    public void testGetCustomerByEmail()
-    {
-        Customer customer = customerService.getCustomerByEmail(email);
-        assertEquals(customer.getEmail(), email);
-    }
+	private String firstName = "JUNIT FirstName";
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.customers.CustomerService#createCustomer(com.sivalabs.jcart.entities.Customer)}.
-     */
-    @Test
-    public void testCreateCustomer()
-    {
-        Customer peristedCustomer = customerService.createCustomer(customer);
-        assertEquals(peristedCustomer.getEmail(), email);
-        assertEquals(peristedCustomer.getFirstName(), firstName);
-        assertEquals(peristedCustomer.getPassword(), password);
-    }
+	private String lastName = "JUNIT LastName";
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.customers.CustomerService#getAllCustomers()}.
-     */
-    @Test
-    public void testGetAllCustomers()
-    {
-        List<Customer> customerList = customerService.getAllCustomers();
-        assertTrue(customerList.size() == 1);
-    }
+	private String password = "password";
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.customers.CustomerService#getCustomerById(java.lang.Integer)}.
-     */
-    @Test
-    public void testGetCustomerById()
-    {
-        Customer dbCustomer = customerService.getCustomerById(1);
-        assertNotNull(dbCustomer);
-    }
+	Customer customer = new Customer();
 
-    /**
-     * Test method for
-     * {@link com.sivalabs.jcart.customers.CustomerService#getCustomerOrders(java.lang.String)}.
-     */
-    @Test
-    public void testGetCustomerOrders()
-    {
-        List<Order> dbCustomer = customerService.getCustomerOrders(email);
-        assertTrue(dbCustomer.isEmpty());
-    }
+	@Before
+	public void setUp() {
+		customer.setEmail(email);
+		customer.setFirstName(firstName);
+		customer.setLastName(lastName);
+		customer.setPassword(password);
+		testEntityManager.persist(customer);
+		customerService = new CustomerServiceImpl(customerRepository);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.customers.CustomerService#getCustomerByEmail(java.lang.String)}.
+	 */
+	@Test
+	public void testGetCustomerByEmail() {
+		Customer customer = customerService.getCustomerByEmail(email);
+		assertEquals(customer.getEmail(), email);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.customers.CustomerService#createCustomer(com.sivalabs.jcart.entities.Customer)}.
+	 */
+	@Test
+	public void testCreateCustomer() {
+		Customer peristedCustomer = customerService.createCustomer(customer);
+		assertEquals(peristedCustomer.getEmail(), email);
+		assertEquals(peristedCustomer.getFirstName(), firstName);
+		assertEquals(peristedCustomer.getPassword(), password);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.customers.CustomerService#getAllCustomers()}.
+	 */
+	@Test
+	public void testGetAllCustomers() {
+		List<Customer> customerList = customerService.getAllCustomers();
+		assertTrue(customerList.size() == 1);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.customers.CustomerService#getCustomerById(java.lang.Integer)}.
+	 */
+	@Test
+	public void testGetCustomerById() {
+		Customer dbCustomer = customerService.getCustomerById(1);
+		assertNotNull(dbCustomer);
+	}
+
+	/**
+	 * Test method for
+	 * {@link com.sivalabs.jcart.customers.CustomerService#getCustomerOrders(java.lang.String)}.
+	 */
+	@Test
+	public void testGetCustomerOrders() {
+		List<Order> dbCustomer = customerService.getCustomerOrders(email);
+		assertTrue(dbCustomer.isEmpty());
+	}
 
 }

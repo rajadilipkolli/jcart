@@ -9,16 +9,16 @@ import com.sivalabs.jcart.entities.Order;
  * @author Siva
  *
  */
-public interface CustomerService
-{
-    public Customer getCustomerByEmail(String email);
+public interface CustomerService {
 
-    public Customer createCustomer(Customer customer);
+	public Customer getCustomerByEmail(String email);
 
-    public List<Customer> getAllCustomers();
+	public Customer createCustomer(Customer customer);
 
-    public Customer getCustomerById(Integer id);
+	public List<Customer> getAllCustomers();
 
-    public List<Order> getCustomerOrders(String email);
+	public Customer getCustomerById(Integer id);
+
+	public List<Order> getCustomerOrders(String email);
 
 }

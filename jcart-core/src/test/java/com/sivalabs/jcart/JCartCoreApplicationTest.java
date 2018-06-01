@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart;
 
@@ -14,21 +14,22 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
 /**
  * @author Siva
  *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JCartCoreApplication.class)
-public class JCartCoreApplicationTest
-{
-	@Autowired private DataSource dataSource;
-	
+public class JCartCoreApplicationTest {
+
+	@Autowired
+	private DataSource dataSource;
+
 	@Test
-	public void testDummy() throws SQLException
-	{
+	public void testDummy() throws SQLException {
 		String schema = dataSource.getConnection().getCatalog();
 		assertTrue("jcart".equalsIgnoreCase(schema));
 	}
-	
+
 }

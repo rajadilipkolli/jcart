@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.entities;
 
@@ -34,27 +34,27 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Category implements Serializable
-{
-    private static final long serialVersionUID = 1L;
+public class Category implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = AUTO)
-    private Integer id;
+	private static final long serialVersionUID = 1L;
 
-    @Column(unique = true, nullable = false)
-    @NotEmpty
-    private String name;
+	@Id
+	@GeneratedValue(strategy = AUTO)
+	private Integer id;
 
-    @Column(length = 1024)
-    private String description;
+	@Column(unique = true, nullable = false)
+	@NotEmpty
+	private String name;
 
-    @Column(name = "disp_order")
-    private Integer displayOrder;
+	@Column(length = 1024)
+	private String description;
 
-    private boolean disabled;
+	@Column(name = "disp_order")
+	private Integer displayOrder;
 
-    @OneToMany(mappedBy = "category")
-    private Set<Product> products;
+	private boolean disabled;
+
+	@OneToMany(mappedBy = "category")
+	private Set<Product> products;
 
 }

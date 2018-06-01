@@ -39,113 +39,106 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class OrderController extends AbstractJCartSiteController
-{
+public class OrderController extends AbstractJCartSiteController {
 
-    private final CustomerService customerService;
-    private final OrderService orderService;
-    private final EmailService emailService;
+	private final CustomerService customerService;
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return "Order";
-    }
+	private final OrderService orderService;
 
-    @PostMapping(value = "/orders")
-    public String placeOrder(@Valid @ModelAttribute("order") OrderDTO order,
-            BindingResult result, Model model, HttpServletRequest request)
-    {
-        Cart cart = getOrCreateCart(request);
-        if (result.hasErrors())
-        {
-            model.addAttribute("cart", cart);
-            return "checkout";
-        }
+	private final EmailService emailService;
 
-        Order newOrder = new Order();
+	@Override
+	protected String getHeaderTitle() {
+		return "Order";
+	}
 
-        String email = getCurrentUser().getCustomer().getEmail();
-        Customer customer = customerService.getCustomerByEmail(email);
-        newOrder.setCustomer(customer);
-        Address address = new Address();
-        address.setAddressLine1(order.getAddressLine1());
-        address.setAddressLine2(order.getAddressLine2());
-        address.setCity(order.getCity());
-        address.setState(order.getState());
-        address.setZipCode(order.getZipCode());
-        address.setCountry(order.getCountry());
+	@PostMapping(value = "/orders")
+	public String placeOrder(@Valid @ModelAttribute("order") OrderDTO order,
+			BindingResult result, Model model, HttpServletRequest request) {
+		Cart cart = getOrCreateCart(request);
+		if (result.hasErrors()) {
+			model.addAttribute("cart", cart);
+			return "checkout";
+		}
 
-        newOrder.setDeliveryAddress(address);
+		Order newOrder = new Order();
 
-        Address billingAddress = new Address();
-        billingAddress.setAddressLine1(order.getAddressLine1());
-        billingAddress.setAddressLine2(order.getAddressLine2());
-        billingAddress.setCity(order.getCity());
-        billingAddress.setState(order.getState());
-        billingAddress.setZipCode(order.getZipCode());
-        billingAddress.setCountry(order.getCountry());
+		String email = getCurrentUser().getCustomer().getEmail();
+		Customer customer = customerService.getCustomerByEmail(email);
+		newOrder.setCustomer(customer);
+		Address address = new Address();
+		address.setAddressLine1(order.getAddressLine1());
+		address.setAddressLine2(order.getAddressLine2());
+		address.setCity(order.getCity());
+		address.setState(order.getState());
+		address.setZipCode(order.getZipCode());
+		address.setCountry(order.getCountry());
 
-        newOrder.setBillingAddress(billingAddress);
+		newOrder.setDeliveryAddress(address);
 
-        Set<OrderItem> orderItems = new HashSet<>();
-        List<LineItem> lineItems = cart.getItems();
-        for (LineItem lineItem : lineItems)
-        {
-            OrderItem item = new OrderItem();
-            item.setProduct(lineItem.getProduct());
-            item.setQuantity(lineItem.getQuantity());
-            item.setPrice(lineItem.getProduct().getPrice());
-            item.setOrder(newOrder);
-            orderItems.add(item);
-        }
+		Address billingAddress = new Address();
+		billingAddress.setAddressLine1(order.getAddressLine1());
+		billingAddress.setAddressLine2(order.getAddressLine2());
+		billingAddress.setCity(order.getCity());
+		billingAddress.setState(order.getState());
+		billingAddress.setZipCode(order.getZipCode());
+		billingAddress.setCountry(order.getCountry());
 
-        newOrder.setItems(orderItems);
+		newOrder.setBillingAddress(billingAddress);
 
-        Payment payment = new Payment();
-        payment.setCcNumber(order.getCcNumber());
-        payment.setCvv(order.getCvv());
+		Set<OrderItem> orderItems = new HashSet<>();
+		List<LineItem> lineItems = cart.getItems();
+		for (LineItem lineItem : lineItems) {
+			OrderItem item = new OrderItem();
+			item.setProduct(lineItem.getProduct());
+			item.setQuantity(lineItem.getQuantity());
+			item.setPrice(lineItem.getProduct().getPrice());
+			item.setOrder(newOrder);
+			orderItems.add(item);
+		}
 
-        newOrder.setPayment(payment);
-        Order savedOrder = orderService.createOrder(newOrder);
+		newOrder.setItems(orderItems);
 
-        this.sendOrderConfirmationEmail(savedOrder);
+		Payment payment = new Payment();
+		payment.setCcNumber(order.getCcNumber());
+		payment.setCvv(order.getCvv());
 
-        request.getSession().removeAttribute("CART_KEY");
-        return "redirect:orderconfirmation?orderNumber=" + savedOrder.getOrderNumber();
-    }
+		newOrder.setPayment(payment);
+		Order savedOrder = orderService.createOrder(newOrder);
 
-    protected void sendOrderConfirmationEmail(Order order)
-    {
-        try
-        {
-            emailService.sendEmail(order.getCustomer().getEmail(),
-                    "QuilCartCart - Order Confirmation",
-                    "Your order has been placed successfully.\n" + "Order Number : "
-                            + order.getOrderNumber());
-        }
-        catch (JCartException e)
-        {
-            log.error("Exception occured while attempting to send confirmation email :{}",
-                    e.getMessage(), e);
-        }
-    }
+		this.sendOrderConfirmationEmail(savedOrder);
 
-    @GetMapping(value = "/orderconfirmation")
-    public String showOrderConfirmation(
-            @RequestParam(value = "orderNumber") String orderNumber, Model model)
-    {
-        Order order = orderService.getOrder(orderNumber);
-        model.addAttribute("order", order);
-        return "orderconfirmation";
-    }
+		request.getSession().removeAttribute("CART_KEY");
+		return "redirect:orderconfirmation?orderNumber=" + savedOrder.getOrderNumber();
+	}
 
-    @GetMapping(value = "/orders/{orderNumber}")
-    public String viewOrder(@PathVariable(value = "orderNumber") String orderNumber,
-            Model model)
-    {
-        Order order = orderService.getOrder(orderNumber);
-        model.addAttribute("order", order);
-        return "view_order";
-    }
+	protected void sendOrderConfirmationEmail(Order order) {
+		try {
+			emailService.sendEmail(order.getCustomer().getEmail(),
+					"QuilCartCart - Order Confirmation",
+					"Your order has been placed successfully.\n" + "Order Number : "
+							+ order.getOrderNumber());
+		}
+		catch (JCartException e) {
+			log.error("Exception occured while attempting to send confirmation email :{}",
+					e.getMessage(), e);
+		}
+	}
+
+	@GetMapping(value = "/orderconfirmation")
+	public String showOrderConfirmation(
+			@RequestParam(value = "orderNumber") String orderNumber, Model model) {
+		Order order = orderService.getOrder(orderNumber);
+		model.addAttribute("order", order);
+		return "orderconfirmation";
+	}
+
+	@GetMapping(value = "/orders/{orderNumber}")
+	public String viewOrder(@PathVariable(value = "orderNumber") String orderNumber,
+			Model model) {
+		Order order = orderService.getOrder(orderNumber);
+		model.addAttribute("order", order);
+		return "view_order";
+	}
+
 }

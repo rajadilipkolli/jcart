@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.entities;
 
@@ -23,18 +23,24 @@ import lombok.NoArgsConstructor;
 @Table(name = "addresses")
 @Data
 @NoArgsConstructor
-public class Address implements Serializable
-{
-    private static final long serialVersionUID = 1L;
-    
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Integer id;
-    private String addressLine1;
-    private String addressLine2;
-    private String city;
-    private String state;
-    private String zipCode;
-    private String country;
+public class Address implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	private Integer id;
+
+	private String addressLine1;
+
+	private String addressLine2;
+
+	private String city;
+
+	private String state;
+
+	private String zipCode;
+
+	private String country;
 
 }

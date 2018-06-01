@@ -28,53 +28,51 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class CustomerController extends AbstractJCartSiteController
-{
-    private final CustomerService customerService;
-    private final CustomerValidator customerValidator;
-    private final PasswordEncoder passwordEncoder;
+public class CustomerController extends AbstractJCartSiteController {
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return "Login/Register";
-    }
+	private final CustomerService customerService;
 
-    @GetMapping(value = "/register")
-    public String registerForm(Model model)
-    {
-        model.addAttribute("customer", new Customer());
-        return "register";
-    }
+	private final CustomerValidator customerValidator;
 
-    @PostMapping(value = "/register")
-    public String register(@Valid @ModelAttribute("customer") Customer customer,
-            BindingResult result, Model model, RedirectAttributes redirectAttributes)
-    {
-        customerValidator.validate(customer, result);
-        if (result.hasErrors())
-        {
-            return "register";
-        }
-        String password = customer.getPassword();
-        String encodedPwd = passwordEncoder.encode(password);
-        customer.setPassword(encodedPwd);
+	private final PasswordEncoder passwordEncoder;
 
-        Customer persistedCustomer = customerService.createCustomer(customer);
-        log.debug("Created new Customer with id : {} and email : {}",
-                persistedCustomer.getId(), persistedCustomer.getEmail());
-        redirectAttributes.addFlashAttribute("info", "Customer created successfully");
-        return "redirect:/login";
-    }
+	@Override
+	protected String getHeaderTitle() {
+		return "Login/Register";
+	}
 
-    @GetMapping(value = "/myAccount")
-    public String myAccount(Model model)
-    {
-        String email = getCurrentUser().getCustomer().getEmail();
-        Customer customer = customerService.getCustomerByEmail(email);
-        model.addAttribute("customer", customer);
-        List<Order> orders = customerService.getCustomerOrders(email);
-        model.addAttribute("orders", orders);
-        return "myAccount";
-    }
+	@GetMapping(value = "/register")
+	public String registerForm(Model model) {
+		model.addAttribute("customer", new Customer());
+		return "register";
+	}
+
+	@PostMapping(value = "/register")
+	public String register(@Valid @ModelAttribute("customer") Customer customer,
+			BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+		customerValidator.validate(customer, result);
+		if (result.hasErrors()) {
+			return "register";
+		}
+		String password = customer.getPassword();
+		String encodedPwd = passwordEncoder.encode(password);
+		customer.setPassword(encodedPwd);
+
+		Customer persistedCustomer = customerService.createCustomer(customer);
+		log.debug("Created new Customer with id : {} and email : {}",
+				persistedCustomer.getId(), persistedCustomer.getEmail());
+		redirectAttributes.addFlashAttribute("info", "Customer created successfully");
+		return "redirect:/login";
+	}
+
+	@GetMapping(value = "/myAccount")
+	public String myAccount(Model model) {
+		String email = getCurrentUser().getCustomer().getEmail();
+		Customer customer = customerService.getCustomerByEmail(email);
+		model.addAttribute("customer", customer);
+		List<Order> orders = customerService.getCustomerOrders(email);
+		model.addAttribute("orders", orders);
+		return "myAccount";
+	}
+
 }

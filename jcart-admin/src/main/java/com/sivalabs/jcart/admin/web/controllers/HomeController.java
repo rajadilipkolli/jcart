@@ -25,20 +25,18 @@ import org.springframework.web.bind.annotation.GetMapping;
  *
  */
 @Controller
-public class HomeController extends AbstractJCartAdminController
-{
-    private static final String HOME = "home";
+public class HomeController extends AbstractJCartAdminController {
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return "Home";
-    }
+	private static final String HOME = "home";
 
-    @GetMapping("/home")
-    public String home(Model model)
-    {
-        return HOME;
-    }
+	@Override
+	protected String getHeaderTitle() {
+		return "Home";
+	}
+
+	@GetMapping("/home")
+	public String home(Model model) {
+		return HOME;
+	}
 
 }

@@ -29,79 +29,74 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @Secured(SecurityUtil.MANAGE_ORDERS)
-public class OrderController extends AbstractJCartAdminController
-{
-    private static final String VIEWPREFIX = "orders/";
+public class OrderController extends AbstractJCartAdminController {
 
-    private EmailService emailService;
-    private OrderService orderService;
-    private TemplateEngine templateEngine;
-    
-    /**
-     * @param emailService
-     * @param orderService
-     * @param templateEngine
-     */
-    public OrderController(EmailService emailService, OrderService orderService,
-            TemplateEngine templateEngine)
-    {
-        super();
-        this.emailService = emailService;
-        this.orderService = orderService;
-        this.templateEngine = templateEngine;
-    }
+	private static final String VIEWPREFIX = "orders/";
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return "Manage Orders";
-    }
+	private EmailService emailService;
 
-    @GetMapping(value = "/orders")
-    public String listOrders(Model model)
-    {
-        List<Order> list = orderService.getAllOrders();
-        model.addAttribute("orders", list);
-        return VIEWPREFIX + "orders";
-    }
+	private OrderService orderService;
 
-    @GetMapping(value = "/orders/{orderNumber}")
-    public String editOrderForm(@PathVariable String orderNumber, Model model)
-    {
-        Order order = orderService.getOrder(orderNumber);
-        model.addAttribute("order", order);
-        return VIEWPREFIX + "edit_order";
-    }
+	private TemplateEngine templateEngine;
 
-    @PostMapping(value = "/orders/{orderNumber}")
-    public String updateOrder(@ModelAttribute("order") Order order, BindingResult result,
-            Model model, RedirectAttributes redirectAttributes)
-    {
-        Order persistedOrder = orderService.updateOrder(order);
-        this.sendOrderStatusUpdateEmail(persistedOrder);
-        log.debug("Updated order with orderNumber : {}", persistedOrder.getOrderNumber());
-        redirectAttributes.addFlashAttribute("info", "Order updated successfully");
-        return "redirect:/orders";
-    }
+	/**
+	 * @param emailService
+	 * @param orderService
+	 * @param templateEngine
+	 */
+	public OrderController(EmailService emailService, OrderService orderService,
+			TemplateEngine templateEngine) {
+		super();
+		this.emailService = emailService;
+		this.orderService = orderService;
+		this.templateEngine = templateEngine;
+	}
 
-    protected void sendOrderStatusUpdateEmail(Order order)
-    {
-        try
-        {
-            // Prepare the evaluation context
-            final Context ctx = new Context();
-            ctx.setVariable("order", order);
+	@Override
+	protected String getHeaderTitle() {
+		return "Manage Orders";
+	}
 
-            // Create the HTML body using Thymeleaf
-            final String htmlContent = this.templateEngine
-                    .process("order-status-update-email", ctx);
+	@GetMapping(value = "/orders")
+	public String listOrders(Model model) {
+		List<Order> list = orderService.getAllOrders();
+		model.addAttribute("orders", list);
+		return VIEWPREFIX + "orders";
+	}
 
-            emailService.sendEmail(order.getCustomer().getEmail(),
-                    "QuilCartCart - Order Status Update", htmlContent);
-        }
-        catch (JCartException e)
-        {
-            log.error(e.getMessage(), e);
-        }
-    }
+	@GetMapping(value = "/orders/{orderNumber}")
+	public String editOrderForm(@PathVariable String orderNumber, Model model) {
+		Order order = orderService.getOrder(orderNumber);
+		model.addAttribute("order", order);
+		return VIEWPREFIX + "edit_order";
+	}
+
+	@PostMapping(value = "/orders/{orderNumber}")
+	public String updateOrder(@ModelAttribute("order") Order order, BindingResult result,
+			Model model, RedirectAttributes redirectAttributes) {
+		Order persistedOrder = orderService.updateOrder(order);
+		this.sendOrderStatusUpdateEmail(persistedOrder);
+		log.debug("Updated order with orderNumber : {}", persistedOrder.getOrderNumber());
+		redirectAttributes.addFlashAttribute("info", "Order updated successfully");
+		return "redirect:/orders";
+	}
+
+	protected void sendOrderStatusUpdateEmail(Order order) {
+		try {
+			// Prepare the evaluation context
+			final Context ctx = new Context();
+			ctx.setVariable("order", order);
+
+			// Create the HTML body using Thymeleaf
+			final String htmlContent = this.templateEngine
+					.process("order-status-update-email", ctx);
+
+			emailService.sendEmail(order.getCustomer().getEmail(),
+					"QuilCartCart - Order Status Update", htmlContent);
+		}
+		catch (JCartException e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
 }

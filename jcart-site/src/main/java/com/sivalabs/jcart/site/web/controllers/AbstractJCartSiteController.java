@@ -18,65 +18,55 @@ import com.sivalabs.jcart.site.web.models.Cart;
  * @author Siva
  *
  */
-public abstract class AbstractJCartSiteController
-{
+public abstract class AbstractJCartSiteController {
 
-    @Autowired
-    protected MessageSource messageSource;
+	@Autowired
+	protected MessageSource messageSource;
 
-    protected abstract String getHeaderTitle();
+	protected abstract String getHeaderTitle();
 
-    public String getMessage(String code)
-    {
-        return messageSource.getMessage(code, null, null);
-    }
+	public String getMessage(String code) {
+		return messageSource.getMessage(code, null, null);
+	}
 
-    public String getMessage(String code, String defaultMsg)
-    {
-        return messageSource.getMessage(code, null, defaultMsg, null);
-    }
+	public String getMessage(String code, String defaultMsg) {
+		return messageSource.getMessage(code, null, defaultMsg, null);
+	}
 
-    @ModelAttribute("headerTitle")
-    public String headerTitle()
-    {
-        return getHeaderTitle();
-    }
+	@ModelAttribute("headerTitle")
+	public String headerTitle() {
+		return getHeaderTitle();
+	}
 
-    @ModelAttribute("authenticatedUser")
-    public AuthenticatedUser authenticatedUser(
-            @AuthenticationPrincipal AuthenticatedUser authenticatedUser)
-    {
-        return authenticatedUser;
-    }
+	@ModelAttribute("authenticatedUser")
+	public AuthenticatedUser authenticatedUser(
+			@AuthenticationPrincipal AuthenticatedUser authenticatedUser) {
+		return authenticatedUser;
+	}
 
-    public static AuthenticatedUser getCurrentUser()
-    {
-        Object principal = SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        if (principal instanceof AuthenticatedUser)
-        {
-            return (AuthenticatedUser) principal;
-        }
-        // principal object is either null or represents anonymous user -
-        // neither of which our domain User object can represent - so return null
-        return null;
-    }
+	public static AuthenticatedUser getCurrentUser() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		if (principal instanceof AuthenticatedUser) {
+			return (AuthenticatedUser) principal;
+		}
+		// principal object is either null or represents anonymous user -
+		// neither of which our domain User object can represent - so return null
+		return null;
+	}
 
-    public static boolean isLoggedIn()
-    {
-        return nonNull(getCurrentUser());
-    }
+	public static boolean isLoggedIn() {
+		return nonNull(getCurrentUser());
+	}
 
-    protected Cart getOrCreateCart(HttpServletRequest request)
-    {
-        Cart cart;
-        cart = (Cart) request.getSession().getAttribute("CART_KEY");
-        if (isNull(cart))
-        {
-            cart = new Cart();
-            request.getSession().setAttribute("CART_KEY", cart);
-        }
-        return cart;
-    }
+	protected Cart getOrCreateCart(HttpServletRequest request) {
+		Cart cart;
+		cart = (Cart) request.getSession().getAttribute("CART_KEY");
+		if (isNull(cart)) {
+			cart = new Cart();
+			request.getSession().setAttribute("CART_KEY", cart);
+		}
+		return cart;
+	}
 
 }

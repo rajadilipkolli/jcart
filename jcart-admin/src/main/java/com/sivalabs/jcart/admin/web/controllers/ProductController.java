@@ -61,133 +61,116 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @Secured(MANAGE_PRODUCTS)
-public class ProductController extends AbstractJCartAdminController
-{
+public class ProductController extends AbstractJCartAdminController {
 
-    private static final String VIEWPREFIX = "products/";
+	private static final String VIEWPREFIX = "products/";
 
-    private CatalogService catalogService;
-    private ProductFormValidator productFormValidator;
+	private CatalogService catalogService;
 
-    /**
-     * Spring {@link Autowired} Constructor Injection
-     * 
-     * @param catalogService
-     * @param productFormValidator
-     */
-    public ProductController(CatalogService catalogService,
-            ProductFormValidator productFormValidator)
-    {
-        this.catalogService = catalogService;
-        this.productFormValidator = productFormValidator;
-    }
+	private ProductFormValidator productFormValidator;
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return PRODUCTTITLE;
-    }
+	/**
+	 * Spring {@link Autowired} Constructor Injection
+	 * @param catalogService
+	 * @param productFormValidator
+	 */
+	public ProductController(CatalogService catalogService,
+			ProductFormValidator productFormValidator) {
+		this.catalogService = catalogService;
+		this.productFormValidator = productFormValidator;
+	}
 
-    @ModelAttribute("categoriesList")
-    public List<Category> categoriesList()
-    {
-        return catalogService.getAllCategories();
-    }
+	@Override
+	protected String getHeaderTitle() {
+		return PRODUCTTITLE;
+	}
 
-    @GetMapping(value = "/products")
-    public String listProducts(Model model)
-    {
-        model.addAttribute("products", catalogService.getAllProducts());
-        return VIEWPREFIX + "products";
-    }
+	@ModelAttribute("categoriesList")
+	public List<Category> categoriesList() {
+		return catalogService.getAllCategories();
+	}
 
-    @GetMapping(value = "/products/new")
-    public String createProductForm(Model model)
-    {
-        ProductForm product = new ProductForm();
-        model.addAttribute("product", product);
-        return VIEWPREFIX + "create_product";
-    }
+	@GetMapping(value = "/products")
+	public String listProducts(Model model) {
+		model.addAttribute("products", catalogService.getAllProducts());
+		return VIEWPREFIX + "products";
+	}
 
-    @PostMapping(value = "/products")
-    public String createProduct(@Valid @ModelAttribute("product") ProductForm productForm,
-            BindingResult result, Model model, RedirectAttributes redirectAttributes)
-    {
-        productFormValidator.validate(productForm, result);
-        if (result.hasErrors())
-        {
-            return VIEWPREFIX + "create_product";
-        }
-        Product product = productForm.toProduct();
-        Product persistedProduct = catalogService.createProduct(product);
-        productForm.setId(product.getId());
-        this.saveProductImageToDisk(productForm);
-        log.debug("Created new product with id : {} and name : {}",
-                persistedProduct.getId(), persistedProduct.getName());
-        redirectAttributes.addFlashAttribute("info", "Product created successfully");
-        return "redirect:/products";
-    }
+	@GetMapping(value = "/products/new")
+	public String createProductForm(Model model) {
+		ProductForm product = new ProductForm();
+		model.addAttribute("product", product);
+		return VIEWPREFIX + "create_product";
+	}
 
-    @GetMapping(value = "/products/{id}")
-    public String editProductForm(@PathVariable Integer id, Model model)
-    {
-        Product product = catalogService.getProductById(id);
-        model.addAttribute("product", ProductForm.fromProduct(product));
-        return VIEWPREFIX + "edit_product";
-    }
+	@PostMapping(value = "/products")
+	public String createProduct(@Valid @ModelAttribute("product") ProductForm productForm,
+			BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+		productFormValidator.validate(productForm, result);
+		if (result.hasErrors()) {
+			return VIEWPREFIX + "create_product";
+		}
+		Product product = productForm.toProduct();
+		Product persistedProduct = catalogService.createProduct(product);
+		productForm.setId(product.getId());
+		this.saveProductImageToDisk(productForm);
+		log.debug("Created new product with id : {} and name : {}",
+				persistedProduct.getId(), persistedProduct.getName());
+		redirectAttributes.addFlashAttribute("info", "Product created successfully");
+		return "redirect:/products";
+	}
 
-    @GetMapping(value = "/products/images/{productId}")
-    public void showProductImage(@PathVariable String productId,
-            HttpServletRequest request, HttpServletResponse response)
-    {
-        try
-        {
-            FileSystemResource file = new FileSystemResource(
-                    IMAGES_DIR + productId + ".jpg");
-            response.setContentType("image/jpg");
-            copy(file.getInputStream(), response.getOutputStream());
-            response.flushBuffer();
-        }
-        catch (IOException e)
-        {
-            log.error(e.getMessage(), e);
-        }
-    }
+	@GetMapping(value = "/products/{id}")
+	public String editProductForm(@PathVariable Integer id, Model model) {
+		Product product = catalogService.getProductById(id);
+		model.addAttribute("product", ProductForm.fromProduct(product));
+		return VIEWPREFIX + "edit_product";
+	}
 
-    @PostMapping(value = "/products/{id}")
-    public String updateProduct(@Valid @ModelAttribute("product") ProductForm productForm,
-            BindingResult result, Model model, RedirectAttributes redirectAttributes)
-    {
-        if (result.hasErrors())
-        {
-            return VIEWPREFIX + "edit_product";
-        }
-        Product product = productForm.toProduct();
-        Product persistedProduct = catalogService.updateProduct(product);
-        this.saveProductImageToDisk(productForm);
-        log.debug("Updated product with id : {} and name : {}", persistedProduct.getId(),
-                persistedProduct.getName());
-        redirectAttributes.addFlashAttribute("info", "Product updated successfully");
-        return "redirect:/products";
-    }
+	@GetMapping(value = "/products/images/{productId}")
+	public void showProductImage(@PathVariable String productId,
+			HttpServletRequest request, HttpServletResponse response) {
+		try {
+			FileSystemResource file = new FileSystemResource(
+					IMAGES_DIR + productId + ".jpg");
+			response.setContentType("image/jpg");
+			copy(file.getInputStream(), response.getOutputStream());
+			response.flushBuffer();
+		}
+		catch (IOException e) {
+			log.error(e.getMessage(), e);
+		}
+	}
 
-    protected void saveProductImageToDisk(ProductForm productForm)
-    {
-        MultipartFile file = productForm.getImage();
-        if (nonNull(file) && !file.isEmpty())
-        {
-            String name = new StringBuilder(IMAGES_DIR).append(productForm.getId())
-                    .append(".jpg").toString();
-            try (BufferedOutputStream stream = new BufferedOutputStream(
-                    new FileOutputStream(new File(name))))
-            {
-                byte[] bytes = file.getBytes();
-                stream.write(bytes);
-            }
-            catch (IOException e)
-            {
-                throw new JCartException(e);
-            }
-        }
-    }
+	@PostMapping(value = "/products/{id}")
+	public String updateProduct(@Valid @ModelAttribute("product") ProductForm productForm,
+			BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()) {
+			return VIEWPREFIX + "edit_product";
+		}
+		Product product = productForm.toProduct();
+		Product persistedProduct = catalogService.updateProduct(product);
+		this.saveProductImageToDisk(productForm);
+		log.debug("Updated product with id : {} and name : {}", persistedProduct.getId(),
+				persistedProduct.getName());
+		redirectAttributes.addFlashAttribute("info", "Product updated successfully");
+		return "redirect:/products";
+	}
+
+	protected void saveProductImageToDisk(ProductForm productForm) {
+		MultipartFile file = productForm.getImage();
+		if (nonNull(file) && !file.isEmpty()) {
+			String name = new StringBuilder(IMAGES_DIR).append(productForm.getId())
+					.append(".jpg").toString();
+			try (BufferedOutputStream stream = new BufferedOutputStream(
+					new FileOutputStream(new File(name)))) {
+				byte[] bytes = file.getBytes();
+				stream.write(bytes);
+			}
+			catch (IOException e) {
+				throw new JCartException(e);
+			}
+		}
+	}
+
 }

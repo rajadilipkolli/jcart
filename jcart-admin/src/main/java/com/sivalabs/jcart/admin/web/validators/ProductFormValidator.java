@@ -33,30 +33,28 @@ import com.sivalabs.jcart.entities.Product;
  *
  */
 @Component
-public class ProductFormValidator implements Validator
-{
-    @Autowired
-    protected MessageSource messageSource;
-    @Autowired
-    protected CatalogService catalogService;
+public class ProductFormValidator implements Validator {
 
-    @Override
-    public boolean supports(Class<?> clazz)
-    {
-        return Product.class.isAssignableFrom(clazz);
-    }
+	@Autowired
+	protected MessageSource messageSource;
 
-    @Override
-    public void validate(Object target, Errors errors)
-    {
-        ProductForm productForm = (ProductForm) target;
-        String sku = productForm.getSku();
-        Product product = catalogService.getProductBySku(sku);
-        if (nonNull(product))
-        {
-            errors.rejectValue("sku", "error.exists", new Object[] { sku },
-                    "Product SKU " + sku + " already exists");
-        }
-    }
+	@Autowired
+	protected CatalogService catalogService;
+
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return Product.class.isAssignableFrom(clazz);
+	}
+
+	@Override
+	public void validate(Object target, Errors errors) {
+		ProductForm productForm = (ProductForm) target;
+		String sku = productForm.getSku();
+		Product product = catalogService.getProductBySku(sku);
+		if (nonNull(product)) {
+			errors.rejectValue("sku", "error.exists", new Object[] { sku },
+					"Product SKU " + sku + " already exists");
+		}
+	}
 
 }

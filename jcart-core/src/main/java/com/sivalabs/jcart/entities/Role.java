@@ -45,28 +45,28 @@ import lombok.NoArgsConstructor;
 @Data
 @DynamicInsert
 @NoArgsConstructor
-public class Role implements Serializable
-{
-    private static final long serialVersionUID = 1L;
+public class Role implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = AUTO)
-    private Integer id;
+	private static final long serialVersionUID = 1L;
 
-    @NotEmpty
-    @Column(unique = true, nullable = false)
-    private String name;
+	@Id
+	@GeneratedValue(strategy = AUTO)
+	private Integer id;
 
-    @Column(length = 1024)
-    private String description;
+	@NotEmpty
+	@Column(unique = true, nullable = false)
+	private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private List<User> users;
+	@Column(length = 1024)
+	private String description;
 
-    @ManyToMany
-    @JoinTable(name = "role_permission", joinColumns = {
-            @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
-                    @JoinColumn(name = "PERM_ID", referencedColumnName = "ID") })
-    private List<Permission> permissions;
+	@ManyToMany(mappedBy = "roles")
+	private List<User> users;
+
+	@ManyToMany
+	@JoinTable(name = "role_permission", joinColumns = {
+			@JoinColumn(name = "ROLE_ID", referencedColumnName = "ID") }, inverseJoinColumns = {
+					@JoinColumn(name = "PERM_ID", referencedColumnName = "ID") })
+	private List<Permission> permissions;
 
 }

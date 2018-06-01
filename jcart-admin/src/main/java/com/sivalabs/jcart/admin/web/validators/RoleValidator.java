@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.admin.web.validators;
 
@@ -20,27 +20,24 @@ import lombok.RequiredArgsConstructor;
  */
 @Component
 @RequiredArgsConstructor
-public class RoleValidator implements Validator
-{
-    private final SecurityService securityService;
+public class RoleValidator implements Validator {
 
-    @Override
-    public boolean supports(Class<?> clazz)
-    {
-        return Role.class.isAssignableFrom(clazz);
-    }
+	private final SecurityService securityService;
 
-    @Override
-    public void validate(Object target, Errors errors)
-    {
-        Role role = (Role) target;
-        String name = role.getName();
-        Role roleByName = securityService.getRoleByName(name);
-        if (nonNull(roleByName))
-        {
-            errors.rejectValue("name", "error.exists", new Object[] { name },
-                    "Role " + name + " already exists");
-        }
-    }
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return Role.class.isAssignableFrom(clazz);
+	}
+
+	@Override
+	public void validate(Object target, Errors errors) {
+		Role role = (Role) target;
+		String name = role.getName();
+		Role roleByName = securityService.getRoleByName(name);
+		if (nonNull(roleByName)) {
+			errors.rejectValue("name", "error.exists", new Object[] { name },
+					"Role " + name + " already exists");
+		}
+	}
 
 }

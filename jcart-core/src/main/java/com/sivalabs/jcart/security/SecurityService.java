@@ -6,35 +6,34 @@ import com.sivalabs.jcart.entities.Permission;
 import com.sivalabs.jcart.entities.Role;
 import com.sivalabs.jcart.entities.User;
 
-public interface SecurityService
-{
+public interface SecurityService {
 
-    User findUserByEmail(String userEmail);
+	User findUserByEmail(String userEmail);
 
-    List<Permission> getAllPermissions();
+	List<Permission> getAllPermissions();
 
-    List<Role> getAllRoles();
+	List<Role> getAllRoles();
 
-    Role createRole(Role role);
+	Role createRole(Role role);
 
-    Role getRoleById(Integer id);
+	Role getRoleById(Integer id);
 
-    Role updateRole(Role role);
+	Role updateRole(Role role);
 
-    String resetPassword(String email);
+	String resetPassword(String email);
 
-    boolean verifyPasswordResetToken(String email, String token);
+	boolean verifyPasswordResetToken(String email, String token);
 
-    void updatePassword(String email, String token, String encodedPwd);
+	void updatePassword(String email, String token, String encodedPwd);
 
-    List<User> getAllUsers();
+	List<User> getAllUsers();
 
-    User createUser(User user);
+	User createUser(User user);
 
-    User getUserById(Integer id);
+	User getUserById(Integer id);
 
-    User updateUser(User user);
+	User updateUser(User user);
 
-    Role getRoleByName(String roleName);
+	Role getRoleByName(String roleName);
 
 }

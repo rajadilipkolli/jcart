@@ -26,39 +26,34 @@ import lombok.Getter;
  * @author rajakolli
  *
  */
-public final class MenuConfiguration
-{
+public final class MenuConfiguration {
 
-    @Getter
-    private static Map<String, String> menuUrlPatternMap = new HashMap<>();
+	@Getter
+	private static Map<String, String> menuUrlPatternMap = new HashMap<>();
 
-    static
-    {
-        menuUrlPatternMap.put("/home", "Home");
-        menuUrlPatternMap.put("/categories", "Categories");
-        menuUrlPatternMap.put("/products", "Products");
-        menuUrlPatternMap.put("/orders", "Orders");
-        menuUrlPatternMap.put("/customers", "Customers");
-        menuUrlPatternMap.put("/users", "Users");
-        menuUrlPatternMap.put("/roles", "Roles");
-        menuUrlPatternMap.put("/permissions", "Permissions");
-    }
+	static {
+		menuUrlPatternMap.put("/home", "Home");
+		menuUrlPatternMap.put("/categories", "Categories");
+		menuUrlPatternMap.put("/products", "Products");
+		menuUrlPatternMap.put("/orders", "Orders");
+		menuUrlPatternMap.put("/customers", "Customers");
+		menuUrlPatternMap.put("/users", "Users");
+		menuUrlPatternMap.put("/roles", "Roles");
+		menuUrlPatternMap.put("/permissions", "Permissions");
+	}
 
-    private MenuConfiguration()
-    {
-        super();
-    }
+	private MenuConfiguration() {
+		super();
+	}
 
-    public static String getMatchingMenu(String uri)
-    {
-        Set<String> keySet = menuUrlPatternMap.keySet();
-        for (String key : keySet)
-        {
-            if (uri.startsWith(key))
-            {
-                return menuUrlPatternMap.get(key);
-            }
-        }
-        return "";
-    }
+	public static String getMatchingMenu(String uri) {
+		Set<String> keySet = menuUrlPatternMap.keySet();
+		for (String key : keySet) {
+			if (uri.startsWith(key)) {
+				return menuUrlPatternMap.get(key);
+			}
+		}
+		return "";
+	}
+
 }

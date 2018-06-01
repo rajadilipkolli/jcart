@@ -30,61 +30,53 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequiredArgsConstructor
-public class CartRestController extends AbstractJCartSiteController
-{
-    private final CatalogService catalogService;
+public class CartRestController extends AbstractJCartSiteController {
 
-    @Override
-    protected String getHeaderTitle()
-    {
-        return "Rest Cart";
-    }
+	private final CatalogService catalogService;
 
-    @GetMapping(value = "/cart/items/count")
-    public Map<String, Object> getCartItemCount(HttpServletRequest request, Model model)
-    {
-        Cart cart = getOrCreateCart(request);
-        int itemCount = cart.getItemCount();
-        return singletonMap("count", itemCount);
-    }
+	@Override
+	protected String getHeaderTitle() {
+		return "Rest Cart";
+	}
 
-    @PostMapping(value = "/cart/items")
-    public void addToCart(@RequestBody Product product, HttpServletRequest request)
-    {
-        Cart cart = getOrCreateCart(request);
-        Product cartProduct = catalogService.getProductBySku(product.getSku());
-        cart.addItem(cartProduct);
-    }
+	@GetMapping(value = "/cart/items/count")
+	public Map<String, Object> getCartItemCount(HttpServletRequest request, Model model) {
+		Cart cart = getOrCreateCart(request);
+		int itemCount = cart.getItemCount();
+		return singletonMap("count", itemCount);
+	}
 
-    @PutMapping(value = "/cart/items")
-    public void updateCartItem(@RequestBody LineItem item, HttpServletRequest request,
-            HttpServletResponse response)
-    {
-        Cart cart = getOrCreateCart(request);
-        if (item.getQuantity() <= 0)
-        {
-            String sku = item.getProduct().getSku();
-            cart.removeItem(sku);
-        }
-        else
-        {
-            cart.updateItemQuantity(item.getProduct(), item.getQuantity());
-        }
-    }
+	@PostMapping(value = "/cart/items")
+	public void addToCart(@RequestBody Product product, HttpServletRequest request) {
+		Cart cart = getOrCreateCart(request);
+		Product cartProduct = catalogService.getProductBySku(product.getSku());
+		cart.addItem(cartProduct);
+	}
 
-    @DeleteMapping(value = "/cart/items/{sku}")
-    public void removeCartItem(@PathVariable("sku") String sku,
-            HttpServletRequest request)
-    {
-        Cart cart = getOrCreateCart(request);
-        cart.removeItem(sku);
-    }
+	@PutMapping(value = "/cart/items")
+	public void updateCartItem(@RequestBody LineItem item, HttpServletRequest request,
+			HttpServletResponse response) {
+		Cart cart = getOrCreateCart(request);
+		if (item.getQuantity() <= 0) {
+			String sku = item.getProduct().getSku();
+			cart.removeItem(sku);
+		}
+		else {
+			cart.updateItemQuantity(item.getProduct(), item.getQuantity());
+		}
+	}
 
-    @DeleteMapping(value = "/cart")
-    public void clearCart(HttpServletRequest request)
-    {
-        Cart cart = getOrCreateCart(request);
-        cart.setItems(new ArrayList<LineItem>());
-    }
+	@DeleteMapping(value = "/cart/items/{sku}")
+	public void removeCartItem(@PathVariable("sku") String sku,
+			HttpServletRequest request) {
+		Cart cart = getOrCreateCart(request);
+		cart.removeItem(sku);
+	}
+
+	@DeleteMapping(value = "/cart")
+	public void clearCart(HttpServletRequest request) {
+		Cart cart = getOrCreateCart(request);
+		cart.setItems(new ArrayList<LineItem>());
+	}
 
 }

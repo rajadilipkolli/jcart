@@ -31,34 +31,29 @@ import org.springframework.web.filter.OncePerRequestFilter;
  *
  */
 @Component
-public class PostAuthorizationFilter extends OncePerRequestFilter
-{
+public class PostAuthorizationFilter extends OncePerRequestFilter {
 
-    protected String[] ignoreURIs = { "/assets/" };
+	protected String[] ignoreURIs = { "/assets/" };
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException
-    {
-        String uri = request.getRequestURI();
-        if (!isIgnorableURI(uri))
-        {
-            String menu = MenuConfiguration.getMatchingMenu(uri);
-            request.setAttribute("CURRENT_MENU", menu);
-        }
-        chain.doFilter(request, response);
-    }
+	@Override
+	protected void doFilterInternal(HttpServletRequest request,
+			HttpServletResponse response, FilterChain chain)
+			throws ServletException, IOException {
+		String uri = request.getRequestURI();
+		if (!isIgnorableURI(uri)) {
+			String menu = MenuConfiguration.getMatchingMenu(uri);
+			request.setAttribute("CURRENT_MENU", menu);
+		}
+		chain.doFilter(request, response);
+	}
 
-    private boolean isIgnorableURI(String uri)
-    {
-        for (String u : ignoreURIs)
-        {
-            if (uri.startsWith(u))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+	private boolean isIgnorableURI(String uri) {
+		for (String u : ignoreURIs) {
+			if (uri.startsWith(u)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

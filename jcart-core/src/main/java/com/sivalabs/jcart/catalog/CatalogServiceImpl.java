@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.catalog;
 
@@ -24,102 +24,89 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CatalogServiceImpl implements CatalogService
-{
-    private final CategoryRepository categoryRepository;
-    private final ProductRepository productRepository;
+public class CatalogServiceImpl implements CatalogService {
 
-    @Override
-    public List<Category> getAllCategories()
-    {
-        return categoryRepository.findAll();
-    }
+	private final CategoryRepository categoryRepository;
 
-    @Override
-    public List<Product> getAllProducts()
-    {
-        return productRepository.findAll();
-    }
+	private final ProductRepository productRepository;
 
-    @Override
-    public Category getCategoryByName(String name)
-    {
-        return categoryRepository.getByName(name);
-    }
+	@Override
+	public List<Category> getAllCategories() {
+		return categoryRepository.findAll();
+	}
 
-    @Override
-    public Category getCategoryById(Integer id)
-    {
-        return categoryRepository.findById(id).orElse(null);
-    }
+	@Override
+	public List<Product> getAllProducts() {
+		return productRepository.findAll();
+	}
 
-    @Override
-    public Category createCategory(Category category)
-    {
-        Category persistedCategory = getCategoryByName(category.getName());
-        if (nonNull(persistedCategory))
-        {
-            throw new JCartException("Category " + category.getName() + " already exist");
-        }
-        return categoryRepository.save(category);
-    }
+	@Override
+	public Category getCategoryByName(String name) {
+		return categoryRepository.getByName(name);
+	}
 
-    @Override
-    public Category updateCategory(Category category)
-    {
-        Category persistedCategory = getCategoryById(category.getId());
-        if (isNull(persistedCategory))
-        {
-            throw new JCartException("Category " + category.getId() + " doesn't exist");
-        }
-        persistedCategory.setDescription(category.getDescription());
-        persistedCategory.setDisplayOrder(category.getDisplayOrder());
-        persistedCategory.setDisabled(category.isDisabled());
-        return categoryRepository.save(persistedCategory);
-    }
+	@Override
+	public Category getCategoryById(Integer id) {
+		return categoryRepository.findById(id).orElse(null);
+	}
 
-    @Override
-    public Product getProductById(Integer id)
-    {
-        return productRepository.findById(id).orElse(null);
-    }
+	@Override
+	public Category createCategory(Category category) {
+		Category persistedCategory = getCategoryByName(category.getName());
+		if (nonNull(persistedCategory)) {
+			throw new JCartException("Category " + category.getName() + " already exist");
+		}
+		return categoryRepository.save(category);
+	}
 
-    @Override
-    public Product getProductBySku(String sku)
-    {
-        return productRepository.findBySku(sku);
-    }
+	@Override
+	public Category updateCategory(Category category) {
+		Category persistedCategory = getCategoryById(category.getId());
+		if (isNull(persistedCategory)) {
+			throw new JCartException("Category " + category.getId() + " doesn't exist");
+		}
+		persistedCategory.setDescription(category.getDescription());
+		persistedCategory.setDisplayOrder(category.getDisplayOrder());
+		persistedCategory.setDisabled(category.isDisabled());
+		return categoryRepository.save(persistedCategory);
+	}
 
-    @Override
-    public Product createProduct(Product product)
-    {
-        Product persistedProduct = getProductBySku(product.getName());
-        if (nonNull(persistedProduct))
-        {
-            throw new JCartException(
-                    "Product SKU " + product.getSku() + " already exist");
-        }
-        return productRepository.save(product);
-    }
+	@Override
+	public Product getProductById(Integer id) {
+		return productRepository.findById(id).orElse(null);
+	}
 
-    @Override
-    public Product updateProduct(Product product)
-    {
-        Product persistedProduct = getProductById(product.getId());
-        if (isNull(persistedProduct))
-        {
-            throw new JCartException("Product " + product.getId() + " doesn't exist");
-        }
-        persistedProduct.setDescription(product.getDescription());
-        persistedProduct.setDisabled(product.isDisabled());
-        persistedProduct.setPrice(product.getPrice());
-        persistedProduct.setCategory(getCategoryById(product.getCategory().getId()));
-        return productRepository.save(persistedProduct);
-    }
+	@Override
+	public Product getProductBySku(String sku) {
+		return productRepository.findBySku(sku);
+	}
 
-    @Override
-    public List<Product> searchProducts(String query)
-    {
-        return productRepository.search("%" + query + "%");
-    }
+	@Override
+	public Product createProduct(Product product) {
+		Product persistedProduct = getProductBySku(product.getName());
+		if (nonNull(persistedProduct)) {
+			throw new JCartException(
+					"Product SKU " + product.getSku() + " already exist");
+		}
+		return productRepository.save(product);
+	}
+
+	@Override
+	public Product updateProduct(Product product) {
+		Product persistedProduct = getProductById(product.getId());
+		if (isNull(persistedProduct)) {
+			throw new JCartException("Product " + product.getId() + " doesn't exist");
+		}
+		persistedProduct.setDescription(product.getDescription());
+		persistedProduct.setDisabled(product.isDisabled());
+		persistedProduct.setPrice(product.getPrice());
+		persistedProduct.setCategory(getCategoryById(product.getCategory().getId()));
+		return productRepository.save(persistedProduct);
+	}
+
+	@Override
+	public List<Product> searchProducts(String query) {
+		return productRepository.search("%" + query + "%");
+	}
+
 }

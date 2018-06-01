@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.site.config;
 
@@ -23,49 +23,44 @@ import lombok.RequiredArgsConstructor;
  */
 @Configuration
 @RequiredArgsConstructor
-public class WebConfig implements WebMvcConfigurer
-{
-    @Value("${server.port:8443}")
-    private int serverPort;
+public class WebConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry)
-    {
-        registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/register").setViewName("register");
-        registry.addRedirectViewController("/", "/home");
-    }
+	@Value("${server.port:8443}")
+	private int serverPort;
 
-    @Bean
-    public TomcatServletWebServerFactory servletContainer()
-    {
-        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory()
-        {
-            @Override
-            protected void postProcessContext(Context context)
-            {
-                SecurityConstraint securityConstraint = new SecurityConstraint();
-                securityConstraint.setUserConstraint("CONFIDENTIAL");
-                SecurityCollection collection = new SecurityCollection();
-                collection.addPattern("/*");
-                securityConstraint.addCollection(collection);
-                context.addConstraint(securityConstraint);
-            }
-        };
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+		registry.addViewController("/login").setViewName("login");
+		registry.addViewController("/register").setViewName("register");
+		registry.addRedirectViewController("/", "/home");
+	}
 
-        tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
-        return tomcat;
-    }
+	@Bean
+	public TomcatServletWebServerFactory servletContainer() {
+		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+			@Override
+			protected void postProcessContext(Context context) {
+				SecurityConstraint securityConstraint = new SecurityConstraint();
+				securityConstraint.setUserConstraint("CONFIDENTIAL");
+				SecurityCollection collection = new SecurityCollection();
+				collection.addPattern("/*");
+				securityConstraint.addCollection(collection);
+				context.addConstraint(securityConstraint);
+			}
+		};
 
-    private Connector initiateHttpConnector()
-    {
-        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-        connector.setScheme("http");
-        connector.setPort(8080);
-        connector.setSecure(false);
-        connector.setRedirectPort(serverPort);
+		tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
+		return tomcat;
+	}
 
-        return connector;
-    }
+	private Connector initiateHttpConnector() {
+		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+		connector.setScheme("http");
+		connector.setPort(8080);
+		connector.setSecure(false);
+		connector.setRedirectPort(serverPort);
+
+		return connector;
+	}
 
 }

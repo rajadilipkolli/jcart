@@ -29,166 +29,145 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class SecurityServiceImpl implements SecurityService
-{
+public class SecurityServiceImpl implements SecurityService {
 
-    private static final String INVALID_EMAILADDRESS = "Invalid email address";
-    private final UserRepository userRepository;
-    private final PermissionRepository permissionRepository;
-    private final RoleRepository roleRepository;
+	private static final String INVALID_EMAILADDRESS = "Invalid email address";
 
-    @Override
-    public User findUserByEmail(String userEmail)
-    {
-        return userRepository.findByEmail(userEmail);
-    }
+	private final UserRepository userRepository;
 
-    @Override
-    public List<Permission> getAllPermissions()
-    {
-        return permissionRepository.findAll();
-    }
+	private final PermissionRepository permissionRepository;
 
-    @Override
-    public List<Role> getAllRoles()
-    {
-        return roleRepository.findAll();
-    }
+	private final RoleRepository roleRepository;
 
-    @Override
-    public Role createRole(Role role)
-    {
-        Role roleByName = getRoleByName(role.getName());
-        if (nonNull(roleByName))
-        {
-            throw new JCartException("Role " + role.getName() + " already exist");
-        }
-        List<Permission> persistedPermissions = role.getPermissions().stream()
-                .filter(permission -> nonNull(permission.getId()))
-                .map(permission -> permissionRepository.findById(permission.getId()).orElse(null))
-                .filter(Objects::nonNull)
-                .collect(toList());
-        role.setPermissions(persistedPermissions);
-        return roleRepository.save(role);
-    }
+	@Override
+	public User findUserByEmail(String userEmail) {
+		return userRepository.findByEmail(userEmail);
+	}
 
-    @Override
-    public Role getRoleById(Integer id)
-    {
-        return roleRepository.findById(id).orElse(null);
-    }
+	@Override
+	public List<Permission> getAllPermissions() {
+		return permissionRepository.findAll();
+	}
 
-    @Override
-    public Role updateRole(Role role)
-    {
-        Role persistedRole = getRoleById(role.getId());
-        if (isNull(persistedRole))
-        {
-            throw new JCartException("Role " + role.getId() + " doesn't exist");
-        }
-        persistedRole.setDescription(role.getDescription());
+	@Override
+	public List<Role> getAllRoles() {
+		return roleRepository.findAll();
+	}
 
-        List<Permission> updatedPermissions = role.getPermissions().stream()
-                .filter(permission -> nonNull(permission.getId()))
-                .map(permission -> permissionRepository.findById(permission.getId()).orElse(null))
-                .filter(Objects::nonNull)
-                .collect(toList());
-        persistedRole.setPermissions(updatedPermissions);
-        return roleRepository.save(persistedRole);
-    }
+	@Override
+	public Role createRole(Role role) {
+		Role roleByName = getRoleByName(role.getName());
+		if (nonNull(roleByName)) {
+			throw new JCartException("Role " + role.getName() + " already exist");
+		}
+		List<Permission> persistedPermissions = role.getPermissions().stream()
+				.filter(permission -> nonNull(permission.getId()))
+				.map(permission -> permissionRepository.findById(permission.getId())
+						.orElse(null))
+				.filter(Objects::nonNull).collect(toList());
+		role.setPermissions(persistedPermissions);
+		return roleRepository.save(role);
+	}
 
-    @Override
-    public String resetPassword(String email)
-    {
-        User user = findUserByEmail(email);
-        if (isNull(user))
-        {
-            throw new JCartException(INVALID_EMAILADDRESS);
-        }
-        String uuid = UUID.randomUUID().toString();
-        user.setPasswordResetToken(uuid);
-        return uuid;
-    }
+	@Override
+	public Role getRoleById(Integer id) {
+		return roleRepository.findById(id).orElse(null);
+	}
 
-    @Override
-    public boolean verifyPasswordResetToken(String email, String token)
-    {
-        User user = findUserByEmail(email);
-        if (isNull(user))
-        {
-            throw new JCartException(INVALID_EMAILADDRESS);
-        }
-        return (StringUtils.hasText(token) && token.equals(user.getPasswordResetToken()));
-    }
+	@Override
+	public Role updateRole(Role role) {
+		Role persistedRole = getRoleById(role.getId());
+		if (isNull(persistedRole)) {
+			throw new JCartException("Role " + role.getId() + " doesn't exist");
+		}
+		persistedRole.setDescription(role.getDescription());
 
-    @Override
-    public void updatePassword(String email, String token, String encodedPwd)
-    {
-        User user = findUserByEmail(email);
-        if (isNull(user))
-        {
-            throw new JCartException(INVALID_EMAILADDRESS);
-        }
-        if (!StringUtils.hasText(token) || !token.equals(user.getPasswordResetToken()))
-        {
-            throw new JCartException("Invalid password reset token");
-        }
-        user.setPassword(encodedPwd);
-        user.setPasswordResetToken(null);
+		List<Permission> updatedPermissions = role.getPermissions().stream()
+				.filter(permission -> nonNull(permission.getId()))
+				.map(permission -> permissionRepository.findById(permission.getId())
+						.orElse(null))
+				.filter(Objects::nonNull).collect(toList());
+		persistedRole.setPermissions(updatedPermissions);
+		return roleRepository.save(persistedRole);
+	}
 
-    }
+	@Override
+	public String resetPassword(String email) {
+		User user = findUserByEmail(email);
+		if (isNull(user)) {
+			throw new JCartException(INVALID_EMAILADDRESS);
+		}
+		String uuid = UUID.randomUUID().toString();
+		user.setPasswordResetToken(uuid);
+		return uuid;
+	}
 
-    @Override
-    public List<User> getAllUsers()
-    {
-        return userRepository.findAll();
-    }
+	@Override
+	public boolean verifyPasswordResetToken(String email, String token) {
+		User user = findUserByEmail(email);
+		if (isNull(user)) {
+			throw new JCartException(INVALID_EMAILADDRESS);
+		}
+		return (StringUtils.hasText(token) && token.equals(user.getPasswordResetToken()));
+	}
 
-    @Override
-    public User createUser(User user)
-    {
-        User userByEmail = findUserByEmail(user.getEmail());
-        if (nonNull(userByEmail))
-        {
-            throw new JCartException("Email " + user.getEmail() + " already in use");
-        }
-        List<Role> persistedRoles = user.getRoles().stream()
-                .filter(role -> nonNull(role.getId()))
-                .map(role -> roleRepository.findById(role.getId()).orElse(null))
-                .filter(Objects::nonNull)
-                .collect(toList());
-        user.setRoles(persistedRoles);
+	@Override
+	public void updatePassword(String email, String token, String encodedPwd) {
+		User user = findUserByEmail(email);
+		if (isNull(user)) {
+			throw new JCartException(INVALID_EMAILADDRESS);
+		}
+		if (!StringUtils.hasText(token) || !token.equals(user.getPasswordResetToken())) {
+			throw new JCartException("Invalid password reset token");
+		}
+		user.setPassword(encodedPwd);
+		user.setPasswordResetToken(null);
 
-        return userRepository.save(user);
-    }
+	}
 
-    @Override
-    public User getUserById(Integer id)
-    {
-        return userRepository.findById(id).orElse(null);
-    }
+	@Override
+	public List<User> getAllUsers() {
+		return userRepository.findAll();
+	}
 
-    @Override
-    public User updateUser(User user)
-    {
-        User persistedUser = getUserById(user.getId());
-        if (isNull(persistedUser))
-        {
-            throw new JCartException("User " + user.getId() + " doesn't exist");
-        }
+	@Override
+	public User createUser(User user) {
+		User userByEmail = findUserByEmail(user.getEmail());
+		if (nonNull(userByEmail)) {
+			throw new JCartException("Email " + user.getEmail() + " already in use");
+		}
+		List<Role> persistedRoles = user.getRoles().stream()
+				.filter(role -> nonNull(role.getId()))
+				.map(role -> roleRepository.findById(role.getId()).orElse(null))
+				.filter(Objects::nonNull).collect(toList());
+		user.setRoles(persistedRoles);
 
-        List<Role> updatedRoles = user.getRoles().stream()
-                .filter(role -> nonNull(role.getId()))
-                .map(role -> roleRepository.findById(role.getId()).orElse(null))
-                .filter(Objects::nonNull)
-                .collect(toList());
-        persistedUser.setRoles(updatedRoles);
-        return userRepository.save(persistedUser);
-    }
+		return userRepository.save(user);
+	}
 
-    @Override
-    public Role getRoleByName(String roleName)
-    {
-        return roleRepository.findByName(roleName);
-    }
+	@Override
+	public User getUserById(Integer id) {
+		return userRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	public User updateUser(User user) {
+		User persistedUser = getUserById(user.getId());
+		if (isNull(persistedUser)) {
+			throw new JCartException("User " + user.getId() + " doesn't exist");
+		}
+
+		List<Role> updatedRoles = user.getRoles().stream()
+				.filter(role -> nonNull(role.getId()))
+				.map(role -> roleRepository.findById(role.getId()).orElse(null))
+				.filter(Objects::nonNull).collect(toList());
+		persistedUser.setRoles(updatedRoles);
+		return userRepository.save(persistedUser);
+	}
+
+	@Override
+	public Role getRoleByName(String roleName) {
+		return roleRepository.findByName(roleName);
+	}
+
 }

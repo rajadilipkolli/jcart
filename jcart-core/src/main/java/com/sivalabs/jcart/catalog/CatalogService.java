@@ -5,29 +5,28 @@ import java.util.List;
 import com.sivalabs.jcart.entities.Category;
 import com.sivalabs.jcart.entities.Product;
 
-public interface CatalogService
-{
+public interface CatalogService {
 
-    Product getProductBySku(String sku);
+	Product getProductBySku(String sku);
 
-    List<Category> getAllCategories();
+	List<Category> getAllCategories();
 
-    Category getCategoryByName(String name);
+	Category getCategoryByName(String name);
 
-    List<Product> searchProducts(String query);
+	List<Product> searchProducts(String query);
 
-    Category createCategory(Category category);
+	Category createCategory(Category category);
 
-    Category getCategoryById(Integer id);
+	Category getCategoryById(Integer id);
 
-    Category updateCategory(Category category);
+	Category updateCategory(Category category);
 
-    List<Product> getAllProducts();
+	List<Product> getAllProducts();
 
-    Product createProduct(Product product);
+	Product createProduct(Product product);
 
-    Product getProductById(Integer id);
+	Product getProductById(Integer id);
 
-    Product updateProduct(Product product);
+	Product updateProduct(Product product);
 
 }

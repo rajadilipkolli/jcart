@@ -25,76 +25,78 @@ import com.sivalabs.jcart.admin.security.PostAuthorizationFilter;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    @Value("${server.port:9443}")
-    private int serverPort;
 
-    private PostAuthorizationFilter postAuthorizationFilter;
-    private MessageSource messageSource;
+	@Value("${server.port:9443}")
+	private int serverPort;
 
-    /**
-     * Spring {@link Autowired}
-     * 
-     * @param postAuthorizationFilter
-     * @param messageSource
-     */
-    public WebConfig(PostAuthorizationFilter postAuthorizationFilter,
-            MessageSource messageSource) {
-        this.postAuthorizationFilter = postAuthorizationFilter;
-        this.messageSource = messageSource;
-    }
+	private PostAuthorizationFilter postAuthorizationFilter;
 
-    @Bean
-    public Validator jsrValidator() {
-        LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
-        factory.setValidationMessageSource(messageSource);
-        return factory;
-    }
+	private MessageSource messageSource;
 
-    @Bean
-    public FilterRegistrationBean<PostAuthorizationFilter> postAuthorizationFilterRegistrationBean() {
-        FilterRegistrationBean<PostAuthorizationFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(postAuthorizationFilter);
-        registrationBean.setOrder(Integer.MAX_VALUE);
-        return registrationBean;
-    }
+	/**
+	 * Spring {@link Autowired}
+	 * @param postAuthorizationFilter
+	 * @param messageSource
+	 */
+	public WebConfig(PostAuthorizationFilter postAuthorizationFilter,
+			MessageSource messageSource) {
+		this.postAuthorizationFilter = postAuthorizationFilter;
+		this.messageSource = messageSource;
+	}
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("public/login");
-        registry.addRedirectViewController("/", "/home");
+	@Bean
+	public Validator jsrValidator() {
+		LocalValidatorFactoryBean factory = new LocalValidatorFactoryBean();
+		factory.setValidationMessageSource(messageSource);
+		return factory;
+	}
 
-    }
+	@Bean
+	public FilterRegistrationBean<PostAuthorizationFilter> postAuthorizationFilterRegistrationBean() {
+		FilterRegistrationBean<PostAuthorizationFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(postAuthorizationFilter);
+		registrationBean.setOrder(Integer.MAX_VALUE);
+		return registrationBean;
+	}
 
-    @Bean
-    public SpringSecurityDialect securityDialect() {
-        return new SpringSecurityDialect();
-    }
+	@Override
+	public void addViewControllers(ViewControllerRegistry registry) {
+		registry.addViewController("/login").setViewName("public/login");
+		registry.addRedirectViewController("/", "/home");
 
-    @Bean
-    public TomcatServletWebServerFactory servletContainer() {
-        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
-            @Override
-            protected void postProcessContext(Context context) {
-                SecurityConstraint securityConstraint = new SecurityConstraint();
-                securityConstraint.setUserConstraint("CONFIDENTIAL");
-                SecurityCollection collection = new SecurityCollection();
-                collection.addPattern("/*");
-                securityConstraint.addCollection(collection);
-                context.addConstraint(securityConstraint);
-            }
-        };
+	}
 
-        tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
-        return tomcat;
-    }
+	@Bean
+	public SpringSecurityDialect securityDialect() {
+		return new SpringSecurityDialect();
+	}
 
-    private Connector initiateHttpConnector() {
-        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-        connector.setScheme("http");
-        connector.setPort(9090);
-        connector.setSecure(false);
-        connector.setRedirectPort(serverPort);
+	@Bean
+	public TomcatServletWebServerFactory servletContainer() {
+		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+			@Override
+			protected void postProcessContext(Context context) {
+				SecurityConstraint securityConstraint = new SecurityConstraint();
+				securityConstraint.setUserConstraint("CONFIDENTIAL");
+				SecurityCollection collection = new SecurityCollection();
+				collection.addPattern("/*");
+				securityConstraint.addCollection(collection);
+				context.addConstraint(securityConstraint);
+			}
+		};
 
-        return connector;
-    }
+		tomcat.addAdditionalTomcatConnectors(initiateHttpConnector());
+		return tomcat;
+	}
+
+	private Connector initiateHttpConnector() {
+		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+		connector.setScheme("http");
+		connector.setPort(9090);
+		connector.setSecure(false);
+		connector.setRedirectPort(serverPort);
+
+		return connector;
+	}
+
 }

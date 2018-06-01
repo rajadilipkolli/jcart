@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.sivalabs.jcart.orders;
 
@@ -11,11 +11,12 @@ import com.sivalabs.jcart.entities.Order;
  * @author Siva
  *
  */
-public interface OrderRepository extends JpaRepository<Order, Integer>
-{
-    /**
-     * @param orderNumber
-     * @return {@link Order}
-     */
-    Order findByOrderNumber(String orderNumber);
+public interface OrderRepository extends JpaRepository<Order, Integer> {
+
+	/**
+	 * @param orderNumber
+	 * @return {@link Order}
+	 */
+	Order findByOrderNumber(String orderNumber);
+
 }
