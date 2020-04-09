@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.sivalabs.jcart.admin.web.controllers;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -26,10 +23,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -37,7 +33,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -53,7 +48,6 @@ import com.sivalabs.jcart.entities.Product;
  * @author rajakolli
  *
  */
-@RunWith(SpringRunner.class)
 @WebMvcTest(controllers = { ProductController.class })
 public class ProductControllerTest {
 
@@ -79,7 +73,7 @@ public class ProductControllerTest {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity())
 				.build();
@@ -131,7 +125,7 @@ public class ProductControllerTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	@WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
 	public void testCreateProductValidationFails() throws Exception {
 		this.mockMvc.perform(post("/products")).andExpect(status().isOk())
@@ -141,7 +135,7 @@ public class ProductControllerTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	@WithMockUser(username = "admin", roles = { "USER", "MANAGE_PRODUCTS" })
 	public void testCreateProductValidationPass() throws Exception {
 		product.setId(1);

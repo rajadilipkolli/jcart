@@ -38,7 +38,7 @@ public class OrderService {
 	}
 
 	public List<Order> getAllOrders() {
-		Sort sort = new Sort(DESC, "createdOn");
+		Sort sort = Sort.by(DESC, "createdOn");
 		return orderRepository.findAll(sort);
 	}
 
